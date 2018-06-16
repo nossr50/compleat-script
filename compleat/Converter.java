@@ -120,13 +120,20 @@ public class Converter {
 			    		
 			    		//Example line
 				    	//3 Angel of Invention (KLD) 4
-			    		if (lineChars[x+1] == '(') {
-			    			//if the character after this one is ( we are done building the name
-		    				//System.out.println("( detected!");
-		    				break;
-		    			} else {
-		    				cardName += curLetter;
-		    			}
+			    		
+			    		if(x >= (lineChars.length - 1))
+			    		{
+			    			cardName += curLetter;
+			    		} else {
+			    			if (lineChars[x+1] == '(') {
+				    			//if the character after this one is ( we are done building the name
+			    				//System.out.println("( detected!");
+			    				break;
+			    			} else {
+			    				cardName += curLetter;
+			    			}
+			    		}
+			    		
 			    		
 			    	}
 			    	
