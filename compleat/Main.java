@@ -13,6 +13,7 @@ public class Main {
 		Converter.Convert(impDir, expDir);
 		System.out.println("Done!");
 		JOptionPane.showMessageDialog(null, "Script executed successfully");
+		//Converter.TestCardApi();
 	}
 
 }
