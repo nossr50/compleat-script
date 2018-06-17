@@ -1,0 +1,13 @@
+This program requires GnuPG and JRE (JAVA) to run
+
+/// INSTALLING GNUPG INSTRUCTIONS
+
+Instructions to install GnuPG
+Install this https://gnupg.org/download/index.html
+Run it and create a profile or a key (theres like 2 big ass buttons to click when you start the program, it should be obvious)
+All it asks is for your name and email, just enter it and then it will ask for a password, enter that too (it can be whatever)
+After this is done you never need to touch GPG again so close that shit
+go to cmd prompt and type this and hit enter
+SET PATH=%PATH%;C:\Program Files (x86)\GNU\GnuPG
+
+This sets GPG up in your environment variables (so when my script tries to send HTTPS requests it knows where GPG.exe is located)
