@@ -9,18 +9,18 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
-import io.magicthegathering.javasdk.api.*;
 import io.magicthegathering.javasdk.resource.Card;
 
 import javax.swing.JOptionPane;
 
+import compleat.datatypes.CardRarityType;
 
 public class Converter {
-	
+
 	//honestly I don't remember shit about Java so ignore anything crazy here
 	static void Convert(final String impDir, final String expDir)
 	{
@@ -91,10 +91,18 @@ public class Converter {
 			boolean areWeSideboard = false;
 			boolean firstEmptyLine = false;
 			
+			int rareLandCounter = 0;
+			
+			
+			
 			//Go through each line and convert it
 			try {
 			    
 			    String line = "";
+			    
+			    //Rarity tracker
+			    HashMap<CardRarityType, Integer> rarityMap = new HashMap<CardRarityType, Integer>();
+			    
 
 			    while ((line = br.readLine()) != null) {
 			    	
@@ -142,6 +150,8 @@ public class Converter {
 			    	}
 			    	
 			    	
+			    	
+			    	
 			    	//Go through each character and grab only what we need
 			    	for(int x = cardNameStartPos; x < lineChars.length; x++)
 			    	{
@@ -171,7 +181,33 @@ public class Converter {
 			    	
 			    	convertedStr = number + " <a class=\"simple\" href=\"https://deckbox.org/mtg/" + cardName + "\">" + cardName + "</a><br>";
 			    	
-			    	CardType ct = GetCard(cardName);
+			    	Card card = Manager.getCard(cardName);
+			    	CardType ct = getSimpleCardType(card);
+			    	
+			    	//Check rarity from the hashmap
+			    	CardRarityType crt = GetRarity(cardName);
+
+			    	
+			    	try {
+			    		int cardCount = Integer.parseInt(number);
+			    		
+			    		if(rarityMap.get(crt) == null)
+			    		{
+			    			rarityMap.put(crt, cardCount);
+			    		} else {
+			    			rarityMap.put(crt, rarityMap.get(crt)+cardCount);
+			    		}
+			    		
+			    		if(ct == CardType.LAND && crt == CardRarityType.RARE)
+				    	{
+				    		rareLandCounter+=cardCount;
+				    	}
+			    	} catch (NumberFormatException nfe)
+			    	{
+			    		System.out.println("Failed to convert String to number...");
+			    	}
+			    	
+			    	
 			    	
 			    	//Determine what type of card it is and put it in the appropriate list
 			    	if(areWeSideboard)
@@ -245,6 +281,29 @@ public class Converter {
 			    sb.append(System.lineSeparator());
 			    sb.append("Script by : nossr50 <3");
 			    sb.append(System.lineSeparator());
+			    
+			    sb.append("--DECK INFO--");
+			    
+			    //sb.append(System.lineSeparator());
+			    
+			    //sb.append("Rarity Count:"+System.lineSeparator());
+			    
+			    sb.append(System.lineSeparator());
+			    sb.append(System.lineSeparator());
+			    sb.append("[LANDS]"+System.lineSeparator());
+			    sb.append("Basic Lands: "+rarityMap.get(CardRarityType.BASIC_LAND)+System.lineSeparator());
+			    sb.append("Rare Lands: "+rareLandCounter+System.lineSeparator());
+			    sb.append(System.lineSeparator());
+			    
+			    sb.append(System.lineSeparator());
+			    sb.append("[TOTAL RARITY COUNT]"+System.lineSeparator());
+			    sb.append("Common: "+rarityMap.get(CardRarityType.COMMON)+System.lineSeparator());
+			    sb.append("Uncommon: "+rarityMap.get(CardRarityType.UNCOMMON)+System.lineSeparator());
+			    sb.append("Rare: "+rarityMap.get(CardRarityType.RARE)+System.lineSeparator());
+			    sb.append("Mythic Rare: "+rarityMap.get(CardRarityType.MYTHIC_RARE)+System.lineSeparator());
+			    
+			    sb.append(System.lineSeparator());
+			    
 			    sb.append("////////////////////////////////////////////////");
 			    
 			} finally {
@@ -281,91 +340,40 @@ public class Converter {
 		}
 	}
 	
-	static void TestCardApi()
+	public static CardType getSimpleCardType(Card card)
 	{
-		System.out.println("Test 0");
-		Card x = CardAPI.getCard(1);
-		System.out.println("Test 1");
 		
-		System.out.println(x.getName());
-		System.out.println("Test 2");
-		CardType herp = GetCard("The Scarab God");
-		System.out.println("GOAL!!");
-	}
-	
-	static CardType GetCard(String cardName)
-	{
-		//Special code to make looking up split cards work
+		/*
+		 * In MTG cards have multiple types, we choose to ignore that and classify them more simply
+		 */
 		
 		
-		CharSequence splitSequence = "///";
-		
-		if(cardName.contains(splitSequence)) {
-			//If the card is a split card we'll rebuild it with a new name and run that instead
-			String correctedName = "";
-			
-			for(char c : cardName.toCharArray())
-			{
-				if(c != '/')
-				{
-					correctedName += c;
-				} else
-				{
-					break;
-				}
-			}
-			
-			return GetCard(correctedName);
-		}
-		
-		System.out.println("Attempting to grab data for card named " + cardName);
-		//int multiverseId = 1;
-		
-		//List<String> filters = Arrays.asList("name: '" + cardName + "'", "language: 'English'"); //Grab cards by name in English
-		List<String> filters = Arrays.asList("name=" + cardName); //Grab cards by name in English
-		
-		List<Card> queryResults = CardAPI.getAllCards(filters); //Get all cards matching a filter
-		
-		System.out.println("Query finished..");
-		
-		if(queryResults.isEmpty())
+		if(card == null)
 		{
-			System.out.println("no cards found!");
+			System.out.println("Results are null!!");
 			return CardType.OTHER;
-		} else {
-			//Check to see if we hit a card
-			Card firstResult = queryResults.get(0);
-			
-			if(firstResult == null)
-			{
-				System.out.println("Results are null!!");
-				return CardType.OTHER;
-			}
-			
-			//First check if the card is a creature, because technically we have artifact creatures
-			for(String type : firstResult.getTypes())
-			{
-				System.out.println("Type: "+type);
-				if(getCardType(type) == CardType.CREATURE) {
-					return CardType.CREATURE;
-				}
-			}
-			
-			//Now if creature didn't come up look for other results
-			
-			for(String type : firstResult.getTypes())
-			{
-				System.out.println("Type: "+type);
-				//We're only going to return the first type that doesn't fall into our other category
-				if(getCardType(type) != CardType.OTHER) {
-					return getCardType(type);
-				}
-				
-			}
-			
-			return CardType.OTHER; //if we make it this far then classify it as other
 		}
 		
+		//First check if the card is a creature, because technically we have artifact creatures
+		for(String type : card.getTypes())
+		{
+			System.out.println("Type: "+type);
+			if(getCardType(type) == CardType.CREATURE) {
+				return CardType.CREATURE;
+			}
+		}
+		
+		//If it's not a creature, we can check the other types
+		for(String type : card.getTypes())
+		{
+			System.out.println("Type: "+type);
+			//We're only going to return the first type that doesn't fall into our other category
+			if(getCardType(type) != CardType.OTHER) {
+				return getCardType(type);
+			}
+		}
+		
+		return CardType.OTHER; //if we make it this far then classify it as other
 	}
 	
 	public static CardType getCardType(String s)
@@ -399,6 +407,51 @@ public class Converter {
 		//Add a space between categories
 		sb.append(System.lineSeparator());
 	}
+	
+	public static CardRarityType GetRarity(String cardName)
+	{
+		//Grab card from cache
+		Card c = Manager.getCard(cardName);
+		
+		switch(c.getRarity())
+		{
+		case "Basic Land":
+			return CardRarityType.BASIC_LAND;
+		case "Uncommon":
+			return CardRarityType.UNCOMMON;
+		case "Common":
+			return CardRarityType.COMMON;
+		case "Rare":
+			return CardRarityType.RARE;
+		case "Mythic Rare":
+			return CardRarityType.MYTHIC_RARE;
+		default:
+			System.out.println("[ Rarity Bugged for (" + c.getName() + ") -- Executing workaround hotfix ]"); //Remove this when the bug gets fixed
+			return CardRarityType.GetRarity(c);
+		}
+	}
+	
+	public static void AddRarity(int cardCount, CardRarityType crt, int basic_land, int uncommon, int common, int rare, int mythic_rare)
+	{
+		switch(crt)
+		{
+		case BASIC_LAND:
+			basic_land+=cardCount;
+			break;
+		case UNCOMMON:
+			uncommon+=cardCount;
+			break;
+		case COMMON:
+			common+=cardCount;
+			break;
+		case RARE:
+			rare+=cardCount;
+		case MYTHIC_RARE:
+			mythic_rare+=cardCount;
+		}
+	}
+	
+	
 }
 
 

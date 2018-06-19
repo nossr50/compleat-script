@@ -11,3 +11,9 @@ go to cmd prompt and type this and hit enter
 SET PATH=%PATH%;C:\Program Files (x86)\GNU\GnuPG
 
 This sets GPG up in your environment variables (so when my script tries to send HTTPS requests it knows where GPG.exe is located)
+
+
+//Compiling
+
+You need to download mtg-api java sdk and compile it with maven and link it in the build path
+for SWT libraries you can just use the precompiled ones provided by eclipse
