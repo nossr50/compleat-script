@@ -1,9 +1,11 @@
 package compleat;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import compleat.datatypes.Deck;
 import compleat.debug.Debugger;
 import io.magicthegathering.javasdk.api.CardAPI;
 import io.magicthegathering.javasdk.resource.Card;
@@ -11,7 +13,8 @@ import io.magicthegathering.javasdk.resource.Card;
 public class Manager {
 	
 	//Cache for cards we've already requested to reduce https requests
-	private static HashMap<String, Card> cardCache = new HashMap<String, Card>();
+	private static HashMap<String, Card> cardCache  = new HashMap<String, Card>();
+	private static ArrayList<Deck> deckArray 		= new ArrayList<Deck>();
 	
 	public static Card getCard(String cardName)
 	{
@@ -56,6 +59,18 @@ public class Manager {
 		
 	}
 	
+	public static ArrayList<Deck> getDecks()
+	{
+		return deckArray;
+	}
+	
+	public static void addDeck(File deckFile)
+	{
+		System.out.println("Adding deck: "+deckFile.toString());
+		Deck deck = new Deck(deckFile);
+		deckArray.add(deck);
+	}
+	
 	static void initLookup(String cardName)
 	{
 		/*
@@ -67,32 +82,33 @@ public class Manager {
 					
 		if(queryResults == null || queryResults.isEmpty())
 		{
-			//Its possible the card isn't in standard so reduce our filters
-			if(queryResults != null) {
-				queryResults.clear(); //Just in case
-			}
-						
-			System.out.println("[QUERY - ALL RESULTS] " + cardName);
-			queryResults = getCards("name=" + cardName);
-						
-			/*
-			 * If there are no results this time with a filter only asking for a name something went wrong
-			 */
-			if(queryResults == null || queryResults.isEmpty()) {
-				System.out.println("Failed to find card named "+cardName+" with only the most basic filters!");
-					
-			} else {
-				System.out.println("Card [" + cardName + "] was found but not recognized to be in Standard");
-						
-			}
+			System.out.println("[WARNING] No results found for query!");
+		} else {
+			addResults(cardName, queryResults);
 		}
-			
+	}
+	
+	static void addResults(String cardName, List<Card> queryResults)
+	{
 		/*
-		 * finally add all cards to cache
+		 * Multiple results for a query can include promotional cards, we do not want promotional cards.
 		 */
+		int index = 0;
+		while(index < queryResults.size())
+		{
+			Card c = queryResults.get(index);
+			//System.out.println("Result Rarity = "+c.getRarity());
 			
-		System.out.println("[CACHE] Adding " + cardName + " to cache");
-		cardCache.put(cardName, queryResults.get(0));
+			if(!c.getRarity().equals("Special"))
+			{
+				//System.out.println("[CACHE] Adding " + cardName + " to cache ("+queryResults.size()+" Results!) ");
+				cardCache.put(cardName, c);
+				break;
+			}
+			
+			//System.out.println("Loop count: " +index);
+			index++;
+		}
 	}
 	
 	public static ArrayList<Card> getCards(String... filters)

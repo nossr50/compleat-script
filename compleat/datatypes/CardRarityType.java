@@ -1,11 +1,6 @@
 package compleat.datatypes;
 
-import java.util.Arrays;
-import java.util.List;
-
-import compleat.Converter;
 import compleat.Manager;
-import io.magicthegathering.javasdk.api.CardAPI;
 import io.magicthegathering.javasdk.resource.Card;
 
 public enum CardRarityType {
@@ -13,7 +8,8 @@ public enum CardRarityType {
 	COMMON("Common"),
 	UNCOMMON("Uncommon"),
 	RARE("Rare"),
-	MYTHIC_RARE("Mythic Rare");
+	MYTHIC_RARE("Mythic Rare"),
+	SPECIAL("Special"); //Special == Promotional cards
 	
 	
 	private String name; //Giving our enums names
@@ -26,23 +22,46 @@ public enum CardRarityType {
 		return name;
 	}
 	
+	public static CardRarityType GetRarity(String cardName)
+	{
+		//Grab card from cache
+		Card c = Manager.getCard(cardName);
+		
+		switch(c.getRarity())
+		{
+		case "Basic Land":
+			return CardRarityType.BASIC_LAND;
+		case "Uncommon":
+			return CardRarityType.UNCOMMON;
+		case "Common":
+			return CardRarityType.COMMON;
+		case "Rare":
+			return CardRarityType.RARE;
+		case "Mythic Rare":
+			return CardRarityType.MYTHIC_RARE;
+		default:
+			System.out.println("[WARNING] Unexpected rarirty for card named "+cardName);
+			return CardRarityType.SPECIAL;
+		}
+	}
+	
 	public static CardRarityType GetRarity(Card card)
 	{
-		System.out.println("## [RARITY QUERY (" + card.getName() + ") ] ##");
-		
-		for(CardRarityType crt : CardRarityType.values())
+		switch(card.getRarity())
 		{
-			//Reset filters query results every loop
-			List<String> 	filters 		= Arrays.asList("name=" + card.getName(), "rarity=" + crt.toString()); //Grab cards by name in English
-			List<Card> 		queryResults 	= CardAPI.getAllCards(filters); //Get all cards matching a filter
-			
-			if(queryResults != null && queryResults.size() > 0) {
-				System.out.println("Found Match for " + crt.toString());
-				Manager.getCard(card.getName()).setRarity(crt.toString()); //Fix the rarity in our local cache
-				return crt;
-			}
+		case "Basic Land":
+			return CardRarityType.BASIC_LAND;
+		case "Uncommon":
+			return CardRarityType.UNCOMMON;
+		case "Common":
+			return CardRarityType.COMMON;
+		case "Rare":
+			return CardRarityType.RARE;
+		case "Mythic Rare":
+			return CardRarityType.MYTHIC_RARE;
+		default:
+			System.out.println("[WARNING] Unexpected rarirty for card named "+card.getName());
+			return CardRarityType.SPECIAL;
 		}
-		
-		return null;
 	}
 }

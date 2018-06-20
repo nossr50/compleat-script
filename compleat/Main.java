@@ -1,9 +1,6 @@
 package compleat;
 
-import javax.swing.JOptionPane;
-
 import compleat.Converter;
-import compleat.gui.ScriptGUI;
 
 public class Main {
 	
@@ -16,14 +13,14 @@ public class Main {
 
 	public static void main(String[] args) {
 		
+		//Prep files
+		Converter.Init(impDir, expDir);
+		
 		//GUI init
 		//ScriptGUI sGUI = new ScriptGUI();
 		
-		Converter.Convert(impDir, expDir);
-		System.out.println("Done!");
-		JOptionPane.showMessageDialog(null, "Script executed successfully");
-		//Converter.TestCardApi();
-
+		Converter.processDeckFiles(impDir, expDir);
+		
+		System.out.println("Script complete, exiting now!");
 	}
-
 }

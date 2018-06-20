@@ -1,16 +1,36 @@
 package compleat.gui;
 
+import java.util.HashMap;
+
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import compleat.Main;
+import compleat.gui.elements.StatusGroup;
 
 public class ScriptGUI {
 	
 	//Local vars
 	Label statusLabel = null;
+	
+	int mainWindowWidth 	= 1024;
+	int mainWindowHeight 	= 768;
+	
+	private String gui_log 	= "";
+	private Composite composite;
+	private StatusGroup deckStatusGroup;
+	
+	Button startScriptButton;
+	
+	
 	
 		public ScriptGUI()
 		{
@@ -32,12 +52,14 @@ public class ScriptGUI {
 			Display display = createDisplay();
 			Shell shell = createShell(display);
 			
-			shell.setSize(640, 800);
+			shell.setSize(mainWindowWidth, mainWindowHeight);
 			
-			addWidgets(shell);
+			initLayout(shell);
+			
+			//addWidgets(shell);
 			
 			
-		    shell.open ();
+		    
 		     
 		     while (!shell.isDisposed ()) {
 		        if (!display.readAndDispatch ()) display.sleep ();
@@ -72,7 +94,7 @@ public class ScriptGUI {
 		public void addWidgets(Shell shell)
 		{
 			//Info text
-			addTextLabels(shell);
+			//addTextLabels(shell);
 			
 			//Status bar
 			
@@ -92,11 +114,42 @@ public class ScriptGUI {
 		public void addStatusBar(Shell shell)
 		{
 			//init
-			statusLabel = new Label (shell, SWT.LEFT);
-			statusLabel.setLocation(shell.getBounds().height / 2, shell.getBounds().width);
+			//statusLabel = new Label (shell, SWT.LEFT);
+			//statusLabel.setLocation(shell.getBounds().height / 2, shell.getBounds().width);
 			
 			//set default status
-			statusLabel.setText ("Current Task: " + Main.curLog);
-			statusLabel.setBounds (shell.getClientArea ());
+			//statusLabel.setText ("Current Task: " + Main.curLog);
+			//statusLabel.setBounds (shell.getClientArea ());
+		}
+		
+		public void initLayout(Shell shell)
+		{
+			GridLayout gl = new GridLayout();
+			gl.numColumns = 3; //Always set first
+			shell.setLayout(gl);
+			
+			initWidgets(shell);
+			
+			shell.pack();
+			shell.open ();
+		}
+		
+		public void initWidgets(Shell shell)
+		{
+			initTextWidgets(shell);
+			initButtonWidgets(shell);
+		}
+		
+		public void initTextWidgets(Shell shell)
+		{
+			composite 			= new Composite(shell, SWT.NONE);
+			deckStatusGroup 	= new StatusGroup(composite);
+		}
+		
+		public void initButtonWidgets(Shell shell)
+		{
+			startScriptButton = new Button(shell, SWT.PUSH);
+			startScriptButton.setText("START");
+			
 		}
 }
