@@ -6,7 +6,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 import compleat.ScriptIO;
@@ -22,6 +24,8 @@ public class ScriptGUI {
 	
 	//Local vars
 	Label statusLabel = null;
+	Button startButton;
+	Button refreshButton;
 	
 	int mainWindowWidth 	= 1024/2;
 	int mainWindowHeight 	= 768/2;
@@ -30,9 +34,12 @@ public class ScriptGUI {
 	private Composite composite;
 	private StatusGroup deckStatusGroup;
 	
-	String appTitle = "The Compleat Tool";
+	String appTitle = "The Compleat Tool - "+verNum;
 	
 	Button startScriptButton;
+	
+	//Listeners
+	Listener listener_start;
 	
 	
 		public ScriptGUI()
@@ -67,7 +74,7 @@ public class ScriptGUI {
 			initLayout(shell);	
 			
 			//Convert files
-			ScriptIO.processDeckFiles(impDir, expDir, this);
+			//ScriptIO.processDeckFiles(impDir, expDir, this);
 		     
 		     while (!shell.isDisposed ()) {
 		        if (!display.readAndDispatch ()) display.sleep ();
@@ -142,11 +149,11 @@ public class ScriptGUI {
 		
 		public void initWidgets(Shell shell)
 		{
-			initTextWidgets(shell);
+			initGroup(shell);
 			initButtonWidgets(shell);
 		}
 		
-		public void initTextWidgets(Shell shell)
+		public void initGroup(Shell shell)
 		{
 			//Make the parent object
 			composite 				= new Composite(shell, SWT.NONE);
@@ -165,8 +172,31 @@ public class ScriptGUI {
 		
 		public void initButtonWidgets(Shell shell)
 		{
-			//startScriptButton = new Button(shell, SWT.PUSH);
-			//startScriptButton.setText("START");
+			startButton 	= new Button(deckStatusGroup, SWT.PUSH);
+			//refreshButton 	= new Button(deckStatusGroup, SWT.PUSH);
+			
+	        //startButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	       // refreshButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			
+			startButton.setText("Start");
+			//refreshButton.setText("Refresh");
+			
+			startButton.update();
+			//refreshButton.update();
+			
+			listener_start = new Listener() {
+			      public void handleEvent(Event e) {
+				        switch (e.type) {
+				        case SWT.Selection:
+				        {
+				          startButtonPressed();
+				          break;
+				        }
+				        }
+				      }
+				    };
+			
+			startButton.addListener(SWT.Selection, listener_start);
 		}
 		
 		public void updateTextWidgets(Deck deck)
@@ -174,5 +204,13 @@ public class ScriptGUI {
 			//System.out.println("Updating deck GUI --");
 			deck.updateProgress(); //Add to the count
 			deckStatusGroup.updateDeckProgressLabels(deck);
+		}
+		
+		public void startButtonPressed()
+		{
+			startButton.setEnabled(false);
+			startButton.update();
+			startButton.removeListener(SWT.Selection, listener_start);
+			ScriptIO.processDeckFiles(impDir, expDir, this);
 		}
 }
