@@ -7,6 +7,7 @@ import java.util.List;
 
 import compleat.datatypes.Deck;
 import compleat.debug.Debugger;
+
 import io.magicthegathering.javasdk.api.CardAPI;
 import io.magicthegathering.javasdk.resource.Card;
 
@@ -16,6 +17,11 @@ public class Manager {
 	private static HashMap<String, Card> cardCache  = new HashMap<String, Card>();
 	private static ArrayList<Deck> deckArray 		= new ArrayList<Deck>();
 	
+	/**
+	 * Grabs an instance of card if it exists, otherwise makes one.
+	 * @param cardName the MTG card by its printed name
+	 * @return a Card object from our local cache
+	 */
 	public static Card getCard(String cardName)
 	{
 		//Special code to make looking up split cards work
@@ -59,11 +65,19 @@ public class Manager {
 		
 	}
 	
+	/**
+	 * 
+	 * @return list of our instantiated Deck objects
+	 */
 	public static ArrayList<Deck> getDecks()
 	{
 		return deckArray;
 	}
 	
+	/**
+	 * Creates a new instance of Deck for deckFile and adds it to our hashmap
+	 * @param deckFile The file containing contents of an MTGA export dump
+	 */
 	public static void addDeck(File deckFile)
 	{
 		System.out.println("Adding deck: "+deckFile.toString());
@@ -71,7 +85,22 @@ public class Manager {
 		deckArray.add(deck);
 	}
 	
-	static void initLookup(String cardName)
+	synchronized public static boolean areDecksCompleat()
+	{
+		for(Deck curDeck : getDecks())
+		{
+			if(!curDeck.isCompleat())
+				return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Looks up the MTG Card via MTG-API's CardAPI and then adds it to our DB
+	 * @param cardName
+	 */
+	private static void initLookup(String cardName)
 	{
 		/*
 		 * Look up the card and then add it to local memory
@@ -88,7 +117,12 @@ public class Manager {
 		}
 	}
 	
-	static void addResults(String cardName, List<Card> queryResults)
+	/**
+	 * Grabs the first non-promo card for a MTG-API DB query
+	 * @param cardName MTG card by its name
+	 * @param queryResults Results of MTG-API query
+	 */
+	private static void addResults(String cardName, List<Card> queryResults)
 	{
 		/*
 		 * Multiple results for a query can include promotional cards, we do not want promotional cards.
@@ -112,6 +146,11 @@ public class Manager {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param filters Filters for our query, see MTG-API documentation
+	 * @return Cards returned from our Query (null or empty if there aren't any)
+	 */
 	public static ArrayList<Card> getCards(String... filters)
 	{
 		ArrayList<String> curFilters = new ArrayList<String>();
@@ -133,16 +172,5 @@ public class Manager {
 			
 			return cards;
 		}
-	}
-	
-	public static boolean hasType(Card card, String type)
-	{
-		for(String s : card.getTypes())
-		{
-			if(s == type) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

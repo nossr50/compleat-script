@@ -1,8 +1,8 @@
 package compleat.runnables;
 
 import compleat.Main;
-import compleat.ScriptIO;
 import compleat.gui.ScriptGUI;
+import compleat.scripts.DeckScript;
 
 public class ScriptThread implements Runnable {
 	
@@ -15,7 +15,7 @@ public class ScriptThread implements Runnable {
 	@Override
 	public void run() {
 		System.out.println("Starting threaded process...");
-		ScriptIO.processDeckFiles(Main.impDir, Main.expDir, sGUI);
+		DeckScript.processDeckFiles(Main.impDir, Main.expDir, sGUI);
 		System.out.println("Finished threaded process!");
 	}
 

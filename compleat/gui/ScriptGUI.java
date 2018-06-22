@@ -12,15 +12,13 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 import compleat.Main;
-import compleat.ScriptIO;
+import compleat.Manager;
 import compleat.datatypes.Deck;
 import compleat.gui.elements.StatusGroup;
 import compleat.runnables.ScriptThread;
+import compleat.scripts.DeckScript;
 
 public class ScriptGUI {
-	
-	//Script vars
-	
 	
 	//Local vars
 	Label statusLabel = null;
@@ -28,7 +26,7 @@ public class ScriptGUI {
 	Button refreshButton;
 	
 	int mainWindowWidth 	= 1024/2;
-	int mainWindowHeight 	= 768/2;
+	int mainWindowHeight 	= 768/2 + 100;
 	
 	private String gui_log 	= "";
 	private Composite composite;
@@ -60,10 +58,9 @@ public class ScriptGUI {
 			 */
 			
 			//Prep files
-			ScriptIO.Init();
+			DeckScript.Init();
 			
 			Display display = createDisplay();
-			
 			Shell shell = createShell(display);
 			
 			
@@ -71,17 +68,13 @@ public class ScriptGUI {
 			shell.setText(appTitle);
 			shell.update();
 			
-			initLayout(shell);	
-			
-			//Convert files
-			//ScriptIO.processDeckFiles(impDir, expDir, this);
+			initLayout(shell);
 		     
 		     while (!shell.isDisposed ()) {
 		        if (!display.readAndDispatch ()) display.sleep ();
 		     }
 		     
 		     display.dispose ();
-			
 		}
 		
 		public Display createDisplay()
@@ -92,7 +85,6 @@ public class ScriptGUI {
 				For most applications you can follow the pattern that is used above. You must create a display before creating any windows, and you must dispose of the display when your shell is closed. You don't need to think about the display much more unless you are designing a multi-threaded application.
 			 */
 			return new Display();
-			
 		}
 		
 		public Shell createShell(Display display)
@@ -168,6 +160,11 @@ public class ScriptGUI {
 			//Have it use the grid layout as well
 			deckStatusGroup.setLayout(new GridLayout(1, false));
 	        deckStatusGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	        
+	        for(Deck curDeck : Manager.getDecks())
+			{
+				DeckScript.checkIfCompleat(curDeck, Main.impDir, Main.expDir, this);
+			}
 		}
 		
 		public void initButtonWidgets(Shell shell)
@@ -176,13 +173,21 @@ public class ScriptGUI {
 			//refreshButton 	= new Button(deckStatusGroup, SWT.PUSH);
 			
 	        //startButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-	       // refreshButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	        //refreshButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			
 			startButton.setText("Start");
 			//refreshButton.setText("Refresh");
 			
 			startButton.update();
 			//refreshButton.update();
+			
+			if(Manager.areDecksCompleat())
+			{
+				startButton.setEnabled(false);
+				deckStatusGroup.setLog("Decks are already compleat!");
+			} else {
+				deckStatusGroup.setLog("Ready!");
+			}
 			
 			listener_start = new Listener() {
 			      public void handleEvent(Event e) {
@@ -199,7 +204,11 @@ public class ScriptGUI {
 			startButton.addListener(SWT.Selection, listener_start);
 		}
 		
-		public void updateTextWidgets(Deck deck)
+		/***
+		 * Updates the text based widgets asynchronously
+		 * @param deck
+		 */
+		public void asyncUpdateTextWidgets(Deck deck)
 		{
 			Display.getDefault().asyncExec(new Runnable() {
 		        public void run() {
@@ -207,7 +216,6 @@ public class ScriptGUI {
 					deckStatusGroup.updateDeckProgressLabels(deck);
 		        }
 		    });
-			
 		}
 		
 		public void startButtonPressed()

@@ -23,6 +23,9 @@ public class Deck {
 	//GUI vars
 	private int lineCount 		= 0; //total lines in files to process
 	private int lineProgress 	= 0; //count of lines processed so far
+	private String fileProgress = "N/A";
+	private String fileStatus   = "Idle";
+	private boolean isCompleat  = false;
 	
 	public Deck(File deckFile)
 	{
@@ -41,14 +44,42 @@ public class Deck {
 		lineCount = initFileLineCount();
 	}
 	
+	synchronized public void setCompleat()
+	{
+		fileStatus = "Compleat";
+		isCompleat = true;
+	}
+	
+	synchronized public boolean isCompleat()
+	{
+		return isCompleat;
+	}
+	
+	synchronized public void setFileStatus(String status)
+	{
+		fileStatus = status;
+	}
+	
+	synchronized public String getFileStatus()
+	{
+		return fileStatus;
+	}
+	
+	synchronized public void setFileProgress(String progress)
+	{
+		fileProgress = progress;
+	}
+	
 	synchronized public void updateProgress()
 	{
 		lineProgress+=1;
+		
+		setFileProgress(lineProgress + " / " + lineCount);
 	}
 	
-	synchronized public int getFileProgess()
+	synchronized public String getFileProgess()
 	{
-		return lineProgress;
+		return fileProgress;
 	}
 	
 	public int getFileLineCount()
@@ -67,7 +98,7 @@ public class Deck {
 		return deckFile.getName();
 	}
 	
-	/***
+	/**
 	 * Add the first lines for each category
 	 */
 	private void initCategoryLines()
