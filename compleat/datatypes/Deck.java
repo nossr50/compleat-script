@@ -41,12 +41,12 @@ public class Deck {
 		lineCount = initFileLineCount();
 	}
 	
-	public void updateProgress()
+	synchronized public void updateProgress()
 	{
 		lineProgress+=1;
 	}
 	
-	public int getFileProgess()
+	synchronized public int getFileProgess()
 	{
 		return lineProgress;
 	}
@@ -62,7 +62,7 @@ public class Deck {
 		boards.get(bt).addCard(card, numCards);
 	}
 	
-	public String getName()
+	synchronized public String getName()
 	{
 		return deckFile.getName();
 	}

@@ -11,16 +11,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
+import compleat.Main;
 import compleat.ScriptIO;
 import compleat.datatypes.Deck;
 import compleat.gui.elements.StatusGroup;
+import compleat.runnables.ScriptThread;
 
 public class ScriptGUI {
 	
 	//Script vars
-	public static String impDir = "import";
-	public static String expDir = "export";
-	public static String verNum = "v0.04";
+	
 	
 	//Local vars
 	Label statusLabel = null;
@@ -34,7 +34,7 @@ public class ScriptGUI {
 	private Composite composite;
 	private StatusGroup deckStatusGroup;
 	
-	String appTitle = "The Compleat Tool - "+verNum;
+	String appTitle = "The Compleat Tool - "+Main.verNum;
 	
 	Button startScriptButton;
 	
@@ -60,7 +60,7 @@ public class ScriptGUI {
 			 */
 			
 			//Prep files
-			ScriptIO.Init(impDir, expDir);
+			ScriptIO.Init();
 			
 			Display display = createDisplay();
 			
@@ -117,7 +117,7 @@ public class ScriptGUI {
 		{
 			//This ones static so we don't need to keep a reference to it
 			Label label = new Label (shell, SWT.LEFT);
-		    label.setText ("Compleat Script\nAuthor: nossr50\nVersion number : " + verNum);
+		    label.setText ("Compleat Script\nAuthor: nossr50\nVersion number : " + Main.verNum);
 		    label.setBounds (shell.getClientArea ());
 		    
 		    //Status bar
@@ -201,9 +201,13 @@ public class ScriptGUI {
 		
 		public void updateTextWidgets(Deck deck)
 		{
-			//System.out.println("Updating deck GUI --");
-			deck.updateProgress(); //Add to the count
-			deckStatusGroup.updateDeckProgressLabels(deck);
+			Display.getDefault().asyncExec(new Runnable() {
+		        public void run() {
+		        	//System.out.println("Updating deck GUI --");
+					deckStatusGroup.updateDeckProgressLabels(deck);
+		        }
+		    });
+			
 		}
 		
 		public void startButtonPressed()
@@ -211,6 +215,10 @@ public class ScriptGUI {
 			startButton.setEnabled(false);
 			startButton.update();
 			startButton.removeListener(SWT.Selection, listener_start);
-			ScriptIO.processDeckFiles(impDir, expDir, this);
+			
+			ScriptThread st = new ScriptThread(this);
+			Thread thread = new Thread(st);
+			
+			thread.start();
 		}
 }

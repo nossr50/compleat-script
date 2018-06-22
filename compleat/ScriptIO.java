@@ -23,14 +23,14 @@ import compleat.gui.ScriptGUI;
 public class ScriptIO {
 
 	//honestly I don't remember shit about Java so ignore anything crazy here
-	public static void Init(final String impDir, final String expDir)
+	public static void Init()
 	{
 		//Create file directories if they don't exist
-		makedir(impDir); 
-		makedir(expDir);
+		makedir(Main.impDir); 
+		makedir(Main.expDir);
 		
 		//Make Deck objects out of our files to prep for IO
-		addDecks(impDir, expDir);
+		addDecks(Main.impDir, Main.expDir);
 	}
 	
 	static void makedir (String impDir)
@@ -123,6 +123,7 @@ public class ScriptIO {
 			    	//Add the card to our deck
 			    	parseCardName(line, curDeck, bt);
 			    	
+			    	curDeck.updateProgress(); //Add to the count
 			    	sGUI.updateTextWidgets(curDeck);
 			    }
 			    
