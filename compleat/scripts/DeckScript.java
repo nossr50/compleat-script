@@ -112,35 +112,42 @@ public class DeckScript {
 		String impFilePATH = impDir + File.separator + fileName;
 		String expFilePATH = expDir + File.separator + fileName;
 		
+		File expFile = new File(expFilePATH);
+		
+		if(!expFile.exists())
+		{
+			System.out.println("File doesn't exist");
+			return false;
+		}
+		
 		String imp_md5;
 		String exp_metadata_md5 = Checksum.readAttributes(expFilePATH); //The export file contains the MD5 of the import file in its metadata
 		
 		try {
-			
-			imp_md5 = Checksum.getMD5Checksum(impFilePATH);
-			
-			if(imp_md5 != null)
-				System.out.println("IMP : "+imp_md5);
-			
-			if(exp_metadata_md5 != null)
-				System.out.println("EXP : "+exp_metadata_md5);
-			
-			if(imp_md5.equals(exp_metadata_md5))
-			{
-				System.out.println("Deck is compleat!");
-				curDeck.setCompleat();
-				updateDeckGUIElements(curDeck, sGUI, null, null);
-				System.out.println("Deck is compleat 2!");
+				imp_md5 = Checksum.getMD5Checksum(impFilePATH);
 				
-				return true;
-			} else {
-				System.out.println("Deck isn't compleat!");
-				curDeck.setFileStatus("Idle");
-				return false;
-			}
+				if(imp_md5 != null)
+					System.out.println("IMP : "+imp_md5);
+				
+				if(exp_metadata_md5 != null)
+					System.out.println("EXP : "+exp_metadata_md5);
+				
+				if(imp_md5.equals(exp_metadata_md5))
+				{
+					System.out.println("Deck is compleat!");
+					curDeck.setCompleat();
+					updateDeckGUIElements(curDeck, sGUI, null, null);
+					System.out.println("Deck is compleat 2!");
+					
+					return true;
+				} else {
+					System.out.println("Deck isn't compleat!");
+					curDeck.setFileStatus("Idle");
+					return false;
+				}
 		} catch (Exception e) {
 			
-			//e.printStackTrace();
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -162,9 +169,8 @@ public class DeckScript {
 		
 		try {
 			
-			if(checkIfCompleat(curDeck, impDir, expDir, sGUI))
+			if(!checkIfCompleat(curDeck, impDir, expDir, sGUI))
 			{
-				System.out.println("Checksum in export matches import file!");
 				try {
 					//File Path
 					String PATH = impDir + File.separator + fileName;
@@ -304,7 +310,7 @@ public class DeckScript {
 				/*
 				 * Export file has already been converted so update the GUI
 				 */
-				
+				System.out.println("Checksum in export matches import file!");
 				curDeck.setCompleat();
 			}
 		} catch (Exception e1) {
