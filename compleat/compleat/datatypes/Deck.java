@@ -1,6 +1,10 @@
 package compleat.datatypes;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,17 +15,18 @@ public class Deck {
 	
 	//Container for deck info
 	
-	private String name; //name of the file
-	
 	private HashMap<BoardType, BoardProfile> boards;
 	private HashMap<Category, ArrayList<String>> exportLines;
 	
 	private File deckFile;
 	
+	//GUI vars
+	private int lineCount 		= 0; //total lines in files to process
+	private int lineProgress 	= 0; //count of lines processed so far
+	
 	public Deck(File deckFile)
 	{
 		this.deckFile 	= deckFile;
-		this.name 		= deckFile.getName();
 		
 		boards = new HashMap<BoardType, BoardProfile>();
 		exportLines = new HashMap<Category, ArrayList<String>>();
@@ -33,6 +38,22 @@ public class Deck {
 		boards.put(BoardType.SIDEBOARD, sideboard);
 		
 		initCategoryLines();
+		lineCount = initFileLineCount();
+	}
+	
+	public void updateProgress()
+	{
+		lineProgress+=1;
+	}
+	
+	public int getFileProgess()
+	{
+		return lineProgress;
+	}
+	
+	public int getFileLineCount()
+	{
+		return lineCount;
 	}
 	
 	public void addCards(String cardName, int numCards, BoardType bt)
@@ -160,5 +181,39 @@ public class Deck {
 	public ArrayList<String> getExportLines(Category cat)
 	{
 		return exportLines.get(cat);
+	}
+	
+	/*
+	 * Line count info for our GUI
+	 */
+	public int initFileLineCount()
+	{
+		String PATH = deckFile.getPath();
+		
+		int count = 0;
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(PATH));
+			String line = "";
+			
+			try {
+				while((line = br.readLine()) != null)
+				{
+					if(line.length() > 0)
+					{
+						count+=1;
+					}
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("FileNotFoundException occured trying to open missing file named: "+getName());
+			e.printStackTrace();
+		}
+		
+		return count;
 	}
 }

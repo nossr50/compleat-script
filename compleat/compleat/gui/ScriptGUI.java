@@ -1,10 +1,6 @@
 package compleat.gui;
 
-import java.util.HashMap;
-
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -13,23 +9,30 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import compleat.Main;
+import compleat.ScriptIO;
+import compleat.datatypes.Deck;
 import compleat.gui.elements.StatusGroup;
 
 public class ScriptGUI {
 	
+	//Script vars
+	public static String impDir = "import";
+	public static String expDir = "export";
+	public static String verNum = "v0.04";
+	
 	//Local vars
 	Label statusLabel = null;
 	
-	int mainWindowWidth 	= 1024;
-	int mainWindowHeight 	= 768;
+	int mainWindowWidth 	= 1024/2;
+	int mainWindowHeight 	= 768/2;
 	
 	private String gui_log 	= "";
 	private Composite composite;
 	private StatusGroup deckStatusGroup;
 	
-	Button startScriptButton;
+	String appTitle = "The Compleat Tool";
 	
+	Button startScriptButton;
 	
 	
 		public ScriptGUI()
@@ -49,17 +52,22 @@ public class ScriptGUI {
 				Dispose the display.
 			 */
 			
+			//Prep files
+			ScriptIO.Init(impDir, expDir);
+			
 			Display display = createDisplay();
+			
 			Shell shell = createShell(display);
 			
+			
 			shell.setSize(mainWindowWidth, mainWindowHeight);
+			shell.setText(appTitle);
+			shell.update();
 			
-			initLayout(shell);
+			initLayout(shell);	
 			
-			//addWidgets(shell);
-			
-			
-		    
+			//Convert files
+			ScriptIO.processDeckFiles(impDir, expDir, this);
 		     
 		     while (!shell.isDisposed ()) {
 		        if (!display.readAndDispatch ()) display.sleep ();
@@ -68,8 +76,6 @@ public class ScriptGUI {
 		     display.dispose ();
 			
 		}
-		
-		
 		
 		public Display createDisplay()
 		{
@@ -104,7 +110,7 @@ public class ScriptGUI {
 		{
 			//This ones static so we don't need to keep a reference to it
 			Label label = new Label (shell, SWT.LEFT);
-		    label.setText ("Compleat Script\nAuthor: nossr50\nVersion number : " + Main.verNum);
+		    label.setText ("Compleat Script\nAuthor: nossr50\nVersion number : " + verNum);
 		    label.setBounds (shell.getClientArea ());
 		    
 		    //Status bar
@@ -125,13 +131,13 @@ public class ScriptGUI {
 		public void initLayout(Shell shell)
 		{
 			GridLayout gl = new GridLayout();
-			gl.numColumns = 3; //Always set first
+			gl.numColumns = 2; //Always set first
 			shell.setLayout(gl);
 			
 			initWidgets(shell);
 			
-			shell.pack();
-			shell.open ();
+			//shell.pack();
+			shell.open();
 		}
 		
 		public void initWidgets(Shell shell)
@@ -142,14 +148,31 @@ public class ScriptGUI {
 		
 		public void initTextWidgets(Shell shell)
 		{
-			composite 			= new Composite(shell, SWT.NONE);
-			deckStatusGroup 	= new StatusGroup(composite);
+			//Make the parent object
+			composite 				= new Composite(shell, SWT.NONE);
+			
+			//Set the layout for the parent object
+			composite.setLayout(new GridLayout(1, false));
+	        composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	        
+	        //Make our deck group object
+			deckStatusGroup 		= new StatusGroup(composite);
+			
+			//Have it use the grid layout as well
+			deckStatusGroup.setLayout(new GridLayout(1, false));
+	        deckStatusGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		}
 		
 		public void initButtonWidgets(Shell shell)
 		{
-			startScriptButton = new Button(shell, SWT.PUSH);
-			startScriptButton.setText("START");
-			
+			//startScriptButton = new Button(shell, SWT.PUSH);
+			//startScriptButton.setText("START");
+		}
+		
+		public void updateTextWidgets(Deck deck)
+		{
+			//System.out.println("Updating deck GUI --");
+			deck.updateProgress(); //Add to the count
+			deckStatusGroup.updateDeckProgressLabels(deck);
 		}
 }

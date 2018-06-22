@@ -103,6 +103,7 @@ public class Manager {
 			{
 				//System.out.println("[CACHE] Adding " + cardName + " to cache ("+queryResults.size()+" Results!) ");
 				cardCache.put(cardName, c);
+				System.out.println("checking rarity..");
 				break;
 			}
 			

@@ -1,0 +1,61 @@
+Lands
+1 <a class="simple" href="https://deckbox.org/mtg/Mountain">Mountain</a><br>
+4 <a class="simple" href="https://deckbox.org/mtg/Drowned Catacomb">Drowned Catacomb</a><br>
+3 <a class="simple" href="https://deckbox.org/mtg/Island">Island</a><br>
+1 <a class="simple" href="https://deckbox.org/mtg/Evolving Wilds">Evolving Wilds</a><br>
+4 <a class="simple" href="https://deckbox.org/mtg/Fetid Pools">Fetid Pools</a><br>
+2 <a class="simple" href="https://deckbox.org/mtg/Ifnir Deadlands">Ifnir Deadlands</a><br>
+4 <a class="simple" href="https://deckbox.org/mtg/Aether Hub">Aether Hub</a><br>
+7 <a class="simple" href="https://deckbox.org/mtg/Swamp">Swamp</a><br>
+
+Creatures
+2 <a class="simple" href="https://deckbox.org/mtg/Kitesail Freebooter">Kitesail Freebooter</a><br>
+3 <a class="simple" href="https://deckbox.org/mtg/Gifted Aetherborn">Gifted Aetherborn</a><br>
+3 <a class="simple" href="https://deckbox.org/mtg/The Scarab God">The Scarab God</a><br>
+2 <a class="simple" href="https://deckbox.org/mtg/Ravenous Chupacabra">Ravenous Chupacabra</a><br>
+1 <a class="simple" href="https://deckbox.org/mtg/Torrential Gearhulk">Torrential Gearhulk</a><br>
+4 <a class="simple" href="https://deckbox.org/mtg/Glint-Sleeve Siphoner">Glint-Sleeve Siphoner</a><br>
+4 <a class="simple" href="https://deckbox.org/mtg/Champion of Wits">Champion of Wits</a><br>
+
+Spells
+2 <a class="simple" href="https://deckbox.org/mtg/The Eldest Reborn">The Eldest Reborn</a><br>
+4 <a class="simple" href="https://deckbox.org/mtg/Fatal Push">Fatal Push</a><br>
+4 <a class="simple" href="https://deckbox.org/mtg/Vraska's Contempt">Vraska's Contempt</a><br>
+1 <a class="simple" href="https://deckbox.org/mtg/Essence Scatter">Essence Scatter</a><br>
+1 <a class="simple" href="https://deckbox.org/mtg/Treasure Map">Treasure Map</a><br>
+1 <a class="simple" href="https://deckbox.org/mtg/Dive Down">Dive Down</a><br>
+
+Planeswalkers
+1 <a class="simple" href="https://deckbox.org/mtg/Liliana, Death's Majesty">Liliana, Death's Majesty</a><br>
+1 <a class="simple" href="https://deckbox.org/mtg/Nicol Bolas, God-Pharaoh">Nicol Bolas, God-Pharaoh</a><br>
+
+Rares (Mainboard)
+Basic Land: 11
+Common: 3
+Uncommon: 19
+Rare: 21
+Mythic Rare: 6
+Special: 0
+
+
+Rares (Sideboard)
+Basic Land: 0
+Common: 0
+Uncommon: 0
+Rare: 0
+Mythic Rare: 0
+Special: 0
+
+
+Rares (Total)
+Basic Land: 11
+Common: 3
+Uncommon: 19
+Rare: 21
+Mythic Rare: 6
+Special: 0
+
+////////////////////////////////////////////////
+Conversion Generated on : 2018/06/21 17:42:38
+Script by : nossr50 <3
+////////////////////////////////////////////////

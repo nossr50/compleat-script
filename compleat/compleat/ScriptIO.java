@@ -10,10 +10,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-
-import io.magicthegathering.javasdk.resource.Card;
 
 import javax.swing.JOptionPane;
 
@@ -21,22 +18,19 @@ import compleat.datatypes.BoardType;
 import compleat.datatypes.CardRarityType;
 import compleat.datatypes.Category;
 import compleat.datatypes.Deck;
+import compleat.gui.ScriptGUI;
 
-public class Converter {
+public class ScriptIO {
 
 	//honestly I don't remember shit about Java so ignore anything crazy here
-	static void Init(final String impDir, final String expDir)
+	public static void Init(final String impDir, final String expDir)
 	{
-		//Establish directories
+		//Create file directories if they don't exist
 		makedir(impDir); 
 		makedir(expDir);
 		
-		
-		//Read through and convert
+		//Make Deck objects out of our files to prep for IO
 		addDecks(impDir, expDir);
-		
-		
-		//processDeckFiles(impDir, expDir);
 	}
 	
 	static void makedir (String impDir)
@@ -55,12 +49,12 @@ public class Converter {
 	    System.out.println(impDir);
 	}
 	
-	static String processDeckFiles (String impDir, String expDir)
+	public static String processDeckFiles (String impDir, String expDir, ScriptGUI sGUI)
 	{
 		//Start the conversion script on each deck file
 		for(Deck curDeck : Manager.getDecks())
 		{
-			writeFile(curDeck, impDir, expDir);
+			writeFile(curDeck, impDir, expDir, sGUI);
 		}
 		
 		return null;
@@ -87,7 +81,7 @@ public class Converter {
 		return null;
 	}
 	
-	static void writeFile(Deck curDeck, String impDir, String expDir)
+	static void writeFile(Deck curDeck, String impDir, String expDir, ScriptGUI sGUI)
 	{
 		System.out.println("Writing deck: "+curDeck.getName());
 		String fileName = curDeck.getName();
@@ -128,6 +122,8 @@ public class Converter {
 			    	
 			    	//Add the card to our deck
 			    	parseCardName(line, curDeck, bt);
+			    	
+			    	sGUI.updateTextWidgets(curDeck);
 			    }
 			    
 			    //Now that we are done adding all the cards, build the export lines
@@ -293,6 +289,8 @@ public class Converter {
 			break;
 		}
 	}
+
+	
 }
 
 
