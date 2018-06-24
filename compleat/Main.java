@@ -8,7 +8,7 @@ public class Main {
 	
 	final public static String impDir = "import";
 	final public static String expDir = "export";
-	final public static String verNum = "v0.07";
+	final public static String verNum = "v0.08";
 
 	public static void main(String[] args) {
 		//GUI init

@@ -70,6 +70,11 @@ public class Deck {
 		fileProgress = progress;
 	}
 	
+	synchronized public int getFileProgressInt()
+	{
+		return lineProgress;
+	}
+	
 	synchronized public void updateProgress()
 	{
 		lineProgress+=1;

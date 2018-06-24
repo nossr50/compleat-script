@@ -213,7 +213,9 @@ public class DeckScript {
 					    	updateDeckGUIElements(curDeck, sGUI, curDeck.getFileProgess(), "Sending Query");
 					    	
 					    	//Finds the name of the card and tries to match it to an existing MTG card
-					    	parseCardName(line, curDeck, bt);
+					    	String cardName = parseCardName(line, curDeck, bt); //This also adds our card to the DB
+					    	
+					    	sGUI.asyncUpdateCardInfo(Manager.getCard(cardName));
 					    	
 					    	//Line progress counter for our GUI
 					    	curDeck.updateProgress();
@@ -336,7 +338,7 @@ public class DeckScript {
 		sGUI.asyncUpdateTextWidgets(deck);
 	}
 	
-	public static void parseCardName(String line, Deck deck, BoardType bt)
+	public static String parseCardName(String line, Deck deck, BoardType bt)
 	{
 		String cardCount 				= "";
 		int cardNameStartPos 			= 0;
@@ -393,6 +395,7 @@ public class DeckScript {
     	
     	//Add card to the deck
     	deck.addCards(cardName, cardCountInteger, bt);
+    	return cardName;
 	}
 	
 	public static void WriteEntries(StringBuilder sb, List<String> sList)
