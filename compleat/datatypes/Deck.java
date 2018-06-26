@@ -135,6 +135,21 @@ public class Deck {
 
 		setFileProgress(gui_lineCountProgress + " / " + gui_lineCount);
 	}
+	
+	/**
+	 * Manually sets the progress of the script
+	 * @param newValue the new value of the progress of the script
+	 */
+	synchronized public void setProgressInt(int newValue)
+	{
+	    gui_lineCountProgress = newValue;
+	    
+	    //Update compleat status based on the new count
+	    if(gui_lineCountProgress < gui_lineCount)
+	        isCompleat = false;
+	    else
+	        isCompleat = true;
+	}
 
 	/**
 	 * Synchronized method

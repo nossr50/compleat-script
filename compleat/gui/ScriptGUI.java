@@ -386,6 +386,12 @@ public class ScriptGUI {
 	{
 		if(btnForce.isEnabled())
 		{
+		    //This is incase the force button is ran multiple times
+		    for(Deck curDeck : Manager.getDecks())
+		    {
+		        curDeck.setProgressInt(0);
+		    }
+		    
 			System.out.println("Forced!");
 			
 			//Disable the buttons
@@ -423,7 +429,7 @@ public class ScriptGUI {
 	 * Resets widgets based on the current state of the script and or application
 	 * <p> Useful because we often need to change many similar GUI elements at the same time
 	 */
-	public void resetWidgets()
+	synchronized public void resetWidgets()
 	{
 		//System.out.println(curState.toString());
 		
@@ -561,8 +567,21 @@ public class ScriptGUI {
 	 * Changes the current state of the script
 	 * @param newState the value to change the state of the script to
 	 */
-	public synchronized void setScriptState(ScriptState newState)
+	synchronized public void setScriptState(ScriptState newState)
 	{
 		curState = newState;
+	}
+	
+	/**
+	 * Synchronized method
+	 * <p> Resets widgets based on the state of the application, run asynchronously
+	 */
+	synchronized public void asyncWidgetReset()
+	{
+	    Display.getDefault().asyncExec(new Runnable() {
+	        public void run() {
+	            resetWidgets();
+	        }
+	    });
 	}
 }

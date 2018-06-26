@@ -23,7 +23,7 @@ public class Main {
 
     final public static String impDir = "import"; //Import directory name
     final public static String expDir = "export"; //Export directory name
-    final public static String verNum = "v0.09";  //Current version of the script
+    final public static String verNum = "v0.09b";  //Current version of the script
 
     /**
      * The main function of our Java application

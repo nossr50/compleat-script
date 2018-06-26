@@ -36,6 +36,6 @@ public class ScriptThread implements Runnable {
 		System.out.println("Finished threaded process!");
 		
 		sGUI.setScriptState(ScriptState.FINISHED);
-		sGUI.resetWidgets();
+		sGUI.asyncWidgetReset();
 	}
 }
