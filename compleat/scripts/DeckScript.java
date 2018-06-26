@@ -3,7 +3,6 @@ package compleat.scripts;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,13 +16,18 @@ import javax.swing.JOptionPane;
 
 import compleat.Main;
 import compleat.Manager;
-import compleat.datatypes.BoardType;
-import compleat.datatypes.CardRarityType;
 import compleat.datatypes.Category;
 import compleat.datatypes.Deck;
+import compleat.datatypes.enums.BoardType;
 import compleat.gui.ScriptGUI;
 import compleat.tools.Checksum;
 
+/**
+ * This class contains the main script for converting MTGA export dumps or MTG cards into a format for the Compleat website
+ * <p> This class also features many helper functions related to operations of its main script, and helper functions related to updating the GUI as the script does its job.
+ * @author nossr50
+ *
+ */
 public class DeckScript {
 
 	/**
@@ -48,12 +52,12 @@ public class DeckScript {
 	private static void makedir (String newDirectory)
 	{
 		String PATH = newDirectory + File.separator; //System specific directory shit
-	    //String directoryName = PATH.concat(this.getClassName());
 
 	    File directory = new File(PATH);
 	    if (! directory.exists()){
-	    	//JOptionPane.showMessageDialog(null, "Directory made");
 	        directory.mkdirs();
+	        //This is only shown if the import directory had to be created
+	        JOptionPane.showMessageDialog(null, "Add files into the import directory and refresh the application!");
 	    } else
 	    {
 	    	//JOptionPane.showMessageDialog(null, "dir exists");
@@ -62,23 +66,23 @@ public class DeckScript {
 	}
 	
 	/**
-	 * This is the main workhorse in our script, it converts MTGA deck exports into something useable for our website
+	 * This is the main workhorse in our script, it converts MTGA deck exports into data and code for the Compleat website
 	 * @param impDir import directory
 	 * @param expDir export directory
-	 * @param sGUI our main GUI object
-	 * @return
+	 * @param sGUI a reference to our GUI object
+	 * @param force whether or not to force the script to convert the import file
 	 */
-	public static void processDeckFiles (String impDir, String expDir, ScriptGUI sGUI)
+	public static void processDeckFiles (String impDir, String expDir, ScriptGUI sGUI, boolean force)
 	{
 		//Start the conversion script on each deck file
 		for(Deck curDeck : Manager.getDecks())
 		{
-			writeFile(curDeck, impDir, expDir, sGUI);
+			writeFile(curDeck, impDir, expDir, sGUI, force);
 		}
 	}
 	
 	/**
-	 * 
+	 * Initializes a Deck object for each file found in the import directory
 	 * @param impDir import directory
 	 * @param expDir export directory
 	 */
@@ -88,7 +92,7 @@ public class DeckScript {
 		
 		File[] files = dir.listFiles();
 		
-		//Convert each one
+		//Initialize each one
 		for (File curFile : files )
 		{
 			Manager.addDeck(curFile);
@@ -102,8 +106,13 @@ public class DeckScript {
 	}
 	
 	/**
-	 * The name is an MTGA reference
-	 * If we've already converted a file, we mark it "Compleat"
+	 * Checks whether or not a Deck's export file contains an md5 checksum identical to the import file stored in its metadata
+	 * and if it does, that means we have already converted it before and therefor it is "compleat"
+	 * @param curDeck The deck to check
+	 * @param impDir Import directory path
+	 * @param expDir Export directory path
+	 * @param sGUI reference to our sGUI object
+	 * @return true if matching md5 checksum was found in the export file, false otherwise
 	 */
 	synchronized public static boolean checkIfCompleat(Deck curDeck, String impDir, String expDir, ScriptGUI sGUI)
 	{
@@ -153,13 +162,15 @@ public class DeckScript {
 	}
 	
 	/**
-	 * 
+	 * This function parses every line of a decks import file for relevant information and then dumps data constructed from that file into an export file of the same name
+	 * <p> This is the main workhorse of our DeckScript
 	 * @param curDeck The deck we are currently processing and writing an export file for
 	 * @param impDir import directory
 	 * @param expDir export directory
 	 * @param sGUI instance of our GUI
+	 * @param force whether or not to force the script to convert the file
 	 */
-	static void writeFile(Deck curDeck, String impDir, String expDir, ScriptGUI sGUI)
+	public static void writeFile(Deck curDeck, String impDir, String expDir, ScriptGUI sGUI, boolean force)
 	{
 		System.out.println("Writing deck: "+curDeck.getName());
 		String fileName = curDeck.getName();
@@ -169,7 +180,7 @@ public class DeckScript {
 		
 		try {
 			
-			if(!checkIfCompleat(curDeck, impDir, expDir, sGUI))
+			if(force || !checkIfCompleat(curDeck, impDir, expDir, sGUI))
 			{
 				try {
 					//File Path
@@ -215,7 +226,7 @@ public class DeckScript {
 					    	//Finds the name of the card and tries to match it to an existing MTG card
 					    	String cardName = parseCardName(line, curDeck, bt); //This also adds our card to the DB
 					    	
-					    	sGUI.asyncUpdateCardInfo(Manager.getCard(cardName));
+					    	sGUI.asyncUpdateCardImage(Manager.getCard(cardName));
 					    	
 					    	//Line progress counter for our GUI
 					    	curDeck.updateProgress();
@@ -323,6 +334,14 @@ public class DeckScript {
 		updateDeckGUIElements(curDeck, sGUI, null, null);
 	}
 	
+	/**
+	 * Synchronized Method
+	 * <p> Updates GUI elements to reflect the state of the script
+	 * @param deck the deck to update GUI elements for
+	 * @param sGUI the reference to our GUI
+	 * @param progress a new value to replace our current progress String (can be null)
+	 * @param status a new value to replace our current status String (can be null)
+	 */
 	synchronized private static void updateDeckGUIElements(Deck deck, ScriptGUI sGUI, String progress, String status)
 	{
 		if(progress != null)
@@ -338,6 +357,13 @@ public class DeckScript {
 		sGUI.asyncUpdateTextWidgets(deck);
 	}
 	
+	/**
+	 * Parses a line of the import file for a card name, and how many cards should be added
+	 * @param line The line of the import file to be processed
+	 * @param deck The associated Deck for this import file
+	 * @param bt The board in which this card belongs
+	 * @return The name of the card after its been parsed from the String
+	 */
 	public static String parseCardName(String line, Deck deck, BoardType bt)
 	{
 		String cardCount 				= "";
@@ -398,6 +424,11 @@ public class DeckScript {
     	return cardName;
 	}
 	
+	/**
+	 * This is a helper function to help write specific Strings into a file
+	 * @param sb The StringBuilder of the file
+	 * @param sList the strings to add to the file
+	 */
 	public static void WriteEntries(StringBuilder sb, List<String> sList)
 	{
 		for(String s : sList)
@@ -409,30 +440,4 @@ public class DeckScript {
 		//Add a space between categories
 		sb.append(System.lineSeparator());
 	}
-	
-	public static void AddRarity(int cardCount, CardRarityType crt, int basic_land, int uncommon, int common, int rare, int mythic_rare)
-	{
-		switch(crt)
-		{
-		case BASIC_LAND:
-			basic_land+=cardCount;
-			break;
-		case UNCOMMON:
-			uncommon+=cardCount;
-			break;
-		case COMMON:
-			common+=cardCount;
-			break;
-		case RARE:
-			rare+=cardCount;
-		case MYTHIC_RARE:
-			mythic_rare+=cardCount;
-		case SPECIAL:
-			break;
-		}
-	}
-
-	
 }
-
-

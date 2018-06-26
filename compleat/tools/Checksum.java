@@ -12,11 +12,13 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 
+/**
+ * This class handles checking md5 checksums for files and storing metadata into files
+ * @author Bill the Lizard (from StackOverflow)
+ * @author nossr50
+ *
+ */
 public class Checksum {
-
-	/*
-	 * Credit to Bill the Lizard from StackOverflow
-	 */
 	public static byte[] createChecksum(String fileName) throws Exception {
 		InputStream fis =  new FileInputStream(fileName);
 
@@ -35,6 +37,12 @@ public class Checksum {
 	    return complete.digest();
 	}
 
+	/**
+	 * Gets the MD5 checksum of a file
+	 * @param fileName the file to check
+	 * @return the MD5 checksum of the given file
+	 * @throws Exception you can probably ignore checking the exception for this method
+	 */
 	public static String getMD5Checksum(String fileName) throws Exception {
 	    byte[] b = createChecksum(fileName);
 	    String result = "";
@@ -45,6 +53,13 @@ public class Checksum {
 	    return result;
 	}
 	
+	/**
+	 * Adds metadata to a file
+	 * <p> We are using this to add md5 checksums to our export files
+	 * @param PATH the path to the file
+	 * @param att the value of the metadata to add
+	 * @throws Exception you can probably ignore checking the exception for this method
+	 */
 	public static void setAttributes(String PATH, String att) throws Exception
 	{
 		String md5 = getMD5Checksum(PATH);
@@ -64,6 +79,12 @@ public class Checksum {
 		}
 	}
 	
+	/**
+	 * Reads the metadata of a file
+	 * <p> We are using this to check the file for MD5 checksums in its metadata
+	 * @param PATH the path to the file
+	 * @return the metadata found in the file (null if not found)
+	 */
 	public static String readAttributes(String PATH)
 	{
 		File f = new File(PATH);
@@ -89,25 +110,10 @@ public class Checksum {
 					System.out.println("[2] ERROR READING MD5 CHECKSUM IN FILE ATTRIBUTES!");
 					//e1.printStackTrace();
 				}
-			
-		    // do something
 		} else {
 			System.out.println("Didn't find an export file named "+PATH);
 		}
 
 		return null;
-	}
-	
-	public static boolean compareChecksum(File fileA, File fileB) throws Exception
-	{
-		if(fileA != null || fileB != null)
-		{
-			String md5_a = getMD5Checksum(fileA.getPath());
-			String md5_b = getMD5Checksum(fileB.getPath());
-			
-			return md5_a.equals(md5_b);
-		} else {
-			return false;
-		}
 	}
 }

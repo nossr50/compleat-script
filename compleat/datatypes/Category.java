@@ -1,7 +1,14 @@
 package compleat.datatypes;
 
+/**
+ * ENUM used for categorizing the export files contents
+ * @see compleat.datatypes.Deck#buildExportLines()
+ * Mostly used as an array to iterate over when creating the export file during DeckScripts writeFile function
+ * @author nossr50
+ *
+ */
 public enum Category {
-	
+
 	LANDS("Lands"),
 	CREATURES("Creatures"),
 	SPELLS("Spells"),
@@ -10,11 +17,14 @@ public enum Category {
 	OTHER("Other"),
 	RARITY_COUNT("Rares"),
 	LAND_INFO("Land Info");
-	
-	String name;
-	
-	Category(String n) { name = n; }
-	
+
+	String name; //String used in our @Override
+
+	Category(String n) { name = n; } //Constructor for ENUMs
+
+	/**
+	 * Returns a string based on the ENUMs constructor
+	 */
 	@Override
 	public String toString()
 	{
