@@ -221,7 +221,7 @@ public class DeckScript {
 					    		continue;
 					    	}
 					    	
-					    	updateDeckGUIElements(curDeck, sGUI, curDeck.getFileProgess(), "Sending Query");
+					    	updateDeckGUIElements(curDeck, sGUI, curDeck.getFileProgressString(), "Sending Query");
 					    	
 					    	//Finds the name of the card and tries to match it to an existing MTG card
 					    	String cardName = parseCardName(line, curDeck, bt); //This also adds our card to the DB

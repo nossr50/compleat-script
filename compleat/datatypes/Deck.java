@@ -155,7 +155,7 @@ public class Deck {
 	 * Synchronized method
 	 * @return String representing how many lines of the file have been processed so far
 	 */
-	synchronized public String getFileProgess() {
+	synchronized public String getFileProgressString() {
 		return gui_deckTableProgress;
 	}
 
@@ -342,5 +342,40 @@ public class Deck {
 		}
 
 		return count;
+	}
+	
+	/**
+	 * Grab the associated File for this deck
+	 * @return the associated File for this Deck
+	 */
+	public File getFile()
+	{
+	    return deckFile;
+	}
+	
+	/**
+	 * Clears all significant information in the Deck, as if it had just been created
+	 */
+	public void clear()
+	{
+	    //gui_lineCount           = 0;
+        gui_lineCountProgress   = 0;
+        
+        setFileProgress(gui_lineCountProgress + " / " + gui_lineCount);
+        
+        gui_deckTableProgress   = getFileProgressString();
+        gui_deckTableStatus     = "Queued";
+        isCompleat              = false;
+        
+	    exportLines = new HashMap<Category, ArrayList<String>>();
+
+        BoardProfile mainboard = new BoardProfile();
+        BoardProfile sideboard = new BoardProfile();
+
+        boards.put(BoardType.MAINBOARD, mainboard);
+        boards.put(BoardType.SIDEBOARD, sideboard);
+
+        initCategoryLines();
+        gui_lineCount = initFileLineCount();
 	}
 }

@@ -329,7 +329,7 @@ public class ScriptGUI {
 	 * Updates the text based widgets asynchronously
 	 * @param deck The deck to update
 	 */
-	public void asyncUpdateTextWidgets(Deck deck)
+	synchronized public void asyncUpdateTextWidgets(Deck deck)
 	{
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
@@ -386,10 +386,13 @@ public class ScriptGUI {
 	{
 		if(btnForce.isEnabled())
 		{
-		    //This is incase the force button is ran multiple times
+		    //Reset all of our Decks
+		    Manager.resetDecks();
+		    
+		    //Reset our table fields to reflect the new information
 		    for(Deck curDeck : Manager.getDecks())
 		    {
-		        curDeck.setProgressInt(0);
+		        updateDeckProgressLabels(curDeck);
 		    }
 		    
 			System.out.println("Forced!");
@@ -533,7 +536,7 @@ public class ScriptGUI {
 	{
 		//Make a table entry for the deck
 		TableItem newDeckTableItem = new TableItem(table, SWT.NONE);
-		newDeckTableItem.setText(new String[] { deck.getName(), deck.getFileProgess(), deck.getFileStatus() });
+		newDeckTableItem.setText(new String[] { deck.getName(), deck.getFileProgressString(), deck.getFileStatus() });
 		deckTableMap.put(deck, newDeckTableItem);
 	}
 
@@ -541,10 +544,10 @@ public class ScriptGUI {
 	 * Updates the fields of the TableItem for a given deck based on its current state
 	 * @param deck The deck to update
 	 */
-	public void updateDeckProgressLabels(Deck deck)
+	synchronized public void updateDeckProgressLabels(Deck deck)
 	{
 		TableItem ti = deckTableMap.get(deck);
-		ti.setText(1, deck.getFileProgess());
+		ti.setText(1, deck.getFileProgressString());
 		ti.setText(2, deck.getFileStatus());
 		table.update();
 

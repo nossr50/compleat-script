@@ -2,9 +2,9 @@ package compleat;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-
 import compleat.datatypes.Deck;
 import io.magicthegathering.javasdk.api.CardAPI;
 import io.magicthegathering.javasdk.resource.Card;
@@ -26,8 +26,8 @@ public class Manager {
 
     //Cache for cards we've already requested to reduce needless https requests on http://mtgjson.com/
     private static HashMap<String, Card> cardCache = new HashMap<String, Card>();
-    //Array of Decks which is constructed by our DeckScript class when it scans for files in the import folder
-    private static ArrayList<Deck>       deckArray = new ArrayList<Deck>();
+    //Map of Decks which is constructed by our DeckScript class when it scans for files in the import folder
+    private static HashMap<File, Deck>   deckMap   = new HashMap<File, Deck>();
 
     /**
      * Grabs an instance of card if it exists in our local cache, otherwise makes a new one after performing HTTPS queries
@@ -72,8 +72,8 @@ public class Manager {
      * @return ArrayList of Decks instantiated from files found in the imports folder
      * @see compleat.scripts.DeckScript#Init() Decks are added to this ArrayList here
      */
-    public static ArrayList<Deck> getDecks() {
-        return deckArray;
+    public static Collection<Deck> getDecks() {
+        return deckMap.values();
     }
 
     /**
@@ -82,8 +82,13 @@ public class Manager {
      */
     public static void addDeck(File deckFile) {
         System.out.println("Adding deck: " + deckFile.toString());
-        Deck deck = new Deck(deckFile);
-        deckArray.add(deck);
+
+        if (deckMap.get(deckFile) == null) {
+            Deck newDeck = new Deck(deckFile);
+            deckMap.put(deckFile, newDeck);
+        } else {
+            deckMap.get(deckFile).clear(); //Reset the decks state (used for the possibility the user has added more entries to the file)
+        }
     }
 
     /**
@@ -168,6 +173,17 @@ public class Manager {
             return null;
         } else {
             return cards;
+        }
+    }
+
+    /**
+     * Resets all decks back to a blank slate, as if they had just been created.
+     * <p> Mainly used with a forced start.
+     */
+    public static void resetDecks() {
+
+        for (Deck curDeck : getDecks()) {
+            curDeck.clear();
         }
     }
 }
