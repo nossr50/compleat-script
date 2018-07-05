@@ -38,8 +38,9 @@ public class DeckScript {
 	public static void Init()
 	{
 		//Create file directories if they don't exist
-		makedir(Main.impDir); 
-		makedir(Main.expDir);
+		makedir(Main.impDir);
+		makedir(Main.impDir+"/guides");
+		makedir(Main.expDir+"/guides");
 		
 		//Make Deck objects out of our files to prep for IO
 		addDecks(Main.impDir, Main.expDir);
@@ -95,7 +96,8 @@ public class DeckScript {
 		//Initialize each one
 		for (File curFile : files )
 		{
-			Manager.addDeck(curFile);
+		    if(!curFile.isDirectory())
+		        Manager.addDeck(curFile);
 		}
 		
 		System.out.println("[DEBUG] Found "+files.length+" decks!");

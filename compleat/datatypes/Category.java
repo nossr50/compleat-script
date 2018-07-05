@@ -9,6 +9,9 @@ package compleat.datatypes;
  */
 public enum Category {
 
+    /*
+     * everything but Lands and Sideboard has another <br> infront
+     */
 	LANDS("Lands"),
 	CREATURES("Creatures"),
 	SPELLS("Spells"),

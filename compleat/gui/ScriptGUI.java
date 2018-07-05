@@ -20,7 +20,7 @@ import compleat.Manager;
 import compleat.datatypes.Deck;
 import compleat.datatypes.enums.ScriptState;
 import compleat.gui.tools.CardImageManager;
-import compleat.runnables.ScriptThread;
+import compleat.runnables.DeckScriptThread;
 import compleat.scripts.DeckScript;
 import io.magicthegathering.javasdk.resource.Card;
 
@@ -151,6 +151,14 @@ public class ScriptGUI {
 		
 		//This is the LAST thing we do before starting the loop
 		shellMain.open();
+		
+		/*
+		 * 
+		GuideScriptThread st = new GuideScriptThread();
+        Thread thread = new Thread(st);
+
+        thread.start();
+		*/
 		
 		//Main loop running while the applications window is open
 		while (!shellMain.isDisposed ()) {
@@ -372,7 +380,7 @@ public class ScriptGUI {
 			progressBar.update();
 
 			//Executes the DeckScript in a new thread
-			ScriptThread st = new ScriptThread(this, false);
+			DeckScriptThread st = new DeckScriptThread(this, false);
 			Thread thread = new Thread(st);
 
 			thread.start();
@@ -404,7 +412,7 @@ public class ScriptGUI {
 			progressBar.update();
 
 			//Executes the DeckScript in a new thread
-			ScriptThread st = new ScriptThread(this, true);
+			DeckScriptThread st = new DeckScriptThread(this, true);
 			Thread thread = new Thread(st);
 
 			thread.start();

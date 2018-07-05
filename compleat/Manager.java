@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import compleat.datatypes.Deck;
+import compleat.datatypes.Guide;
 import io.magicthegathering.javasdk.api.CardAPI;
 import io.magicthegathering.javasdk.resource.Card;
 
@@ -28,6 +29,8 @@ public class Manager {
     private static HashMap<String, Card> cardCache = new HashMap<String, Card>();
     //Map of Decks which is constructed by our DeckScript class when it scans for files in the import folder
     private static HashMap<File, Deck>   deckMap   = new HashMap<File, Deck>();
+    //Map of our Guides which is constructed by our DeckScript class when it scans for files in the import folder
+    private static HashMap<File, Guide>   guideMap   = new HashMap<File, Guide>();
 
     /**
      * Grabs an instance of card if it exists in our local cache, otherwise makes a new one after performing HTTPS queries
@@ -74,6 +77,28 @@ public class Manager {
      */
     public static Collection<Deck> getDecks() {
         return deckMap.values();
+    }
+    
+    /**
+     * @return ArrayList of Guide instantiated from files found in the guides folder
+     */
+    public static Collection<Guide> getGuides() {
+        return guideMap.values();
+    }
+    
+    /**
+     * Creates a new instance of Guide for guideFile and adds it to our hashmap
+     * @param guideFile The file containing contents of a written MTGA guide
+     */
+    public static void addGuide(File guideFile) {
+        System.out.println("Adding Guide: " + guideFile.toString());
+
+        if (guideMap.get(guideFile) == null) {
+            Guide newGuide = new Guide(guideFile);
+            guideMap.put(guideFile, newGuide);
+        } else {
+            //guideMap.get(guideFile).clear();
+        }
     }
 
     /**
@@ -159,7 +184,7 @@ public class Manager {
      * @return Cards returned from our Query (null or empty if there aren't any)
      * @see <a href=https://magicthegathering.io/>MTG-API</a>
      */
-    private static ArrayList<Card> getCards(String... filters) {
+    public static ArrayList<Card> getCards(String... filters) {
         ArrayList<String> curFilters = new ArrayList<String>();
 
         for (String s : filters) {

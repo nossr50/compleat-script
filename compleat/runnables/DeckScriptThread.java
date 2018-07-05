@@ -10,7 +10,7 @@ import compleat.scripts.DeckScript;
  * @author nossr50
  * @see DeckScript#writeFile(compleat.datatypes.Deck, String, String, ScriptGUI, boolean)
  */
-public class ScriptThread implements Runnable {
+public class DeckScriptThread implements Runnable {
 	
 	private ScriptGUI sGUI;
 	private boolean force = false;
@@ -20,7 +20,7 @@ public class ScriptThread implements Runnable {
 	 * @param scriptGUI a reference to our GUI for later use
 	 * @param isForced whether or not we are forcing conversion of files
 	 */
-	public ScriptThread(ScriptGUI scriptGUI, boolean isForced) {
+	public DeckScriptThread(ScriptGUI scriptGUI, boolean isForced) {
 		sGUI = scriptGUI;
 		force = isForced;
 	}
@@ -30,10 +30,10 @@ public class ScriptThread implements Runnable {
 	 */
 	@Override
 	public void run() {
-		System.out.println("Starting threaded process...");
+		System.out.println("Executing Threaded process: Deck Script");
 		sGUI.setScriptState(ScriptState.RUNNING);
 		DeckScript.processDeckFiles(Main.impDir, Main.expDir, sGUI, force);
-		System.out.println("Finished threaded process!");
+		System.out.println("Finished Threaded process: Deck Script");
 		
 		sGUI.setScriptState(ScriptState.FINISHED);
 		sGUI.asyncWidgetReset();

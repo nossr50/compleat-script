@@ -221,16 +221,50 @@ public class Deck {
 	 */
 	public void buildExportLines() {
 		//All cards in the mainboard get sorted
+	    
+	    int landCount          = 0;
+	    int spellCount         = 0;
+	    int creatureCount      = 0;
+	    int planeswalkerCount  = 0;
+	    int sideboardCount     = 0;
+	    
 		for (Card card : boards.get(BoardType.MAINBOARD).getCards()) {
 			Category cardCategory = getCategoryType(card);
-			//System.out.println("Card ("+card.getName()+") -- Category: "+cardCategory.toString());
+			
 			exportLines.get(cardCategory).add(getFormattedLine(card, BoardType.MAINBOARD));
+			
+			switch(cardCategory)
+			{
+            case CREATURES:
+                creatureCount+=1;
+                break;
+            case LANDS:
+                landCount+=1;
+                break;
+            case LAND_INFO:
+                break;
+            case OTHER:
+                break;
+            case PLANESWALKERS:
+                planeswalkerCount+=1;
+                break;
+            case RARITY_COUNT:
+                break;
+            case SPELLS:
+                spellCount+=1;
+                break;
+            default:
+                break;
+			
+			}
 		}
 
 		//Cards in the sideboard do not
 		for (Card card : boards.get(BoardType.SIDEBOARD).getCards()) {
 			System.out.println("Adding " + card.getName() + " to sideboard category!");
 			exportLines.get(Category.SIDEBOARD).add(getFormattedLine(card, BoardType.SIDEBOARD));
+			
+			sideboardCount+=1;
 		}
 
 		//Rarity Stats
@@ -251,16 +285,60 @@ public class Deck {
 		exportLines.get(Category.RARITY_COUNT).add(System.lineSeparator());
 
 		exportLines.get(Category.RARITY_COUNT).add("Rares (Total)");
+		
+		String commonExpStr       = "";
+		String uncommonExpStr     = "";
+		String rareExpStr         = "";
+		String mythicExpStr       = "";
+		
+		exportLines.get(Category.RARITY_COUNT).add("<hr>");
+		exportLines.get(Category.RARITY_COUNT).add("<div class=\"text-center\">");
+		exportLines.get(Category.RARITY_COUNT).add("<strong>");
+		
+		
 		for (CardRarityType crt : CardRarityType.values()) {
 
+		    int sum = 0;
 			int main = boards.get(BoardType.MAINBOARD).getRareCount(crt);
 			int side = boards.get(BoardType.SIDEBOARD).getRareCount(crt);
-			int sum = main + side;
-
-			exportLines.get(Category.RARITY_COUNT).add(crt.toString() + ": " + sum);
+			sum = main + side;
+			
+			switch(crt) {
+            case COMMON:
+                commonExpStr = "    <img src=\"images/cmn.png\" height=\"25\" class=\"d-inline-block align-top boop\"> : "+sum+" &nbsp;&nbsp;&nbsp;";
+                break;
+            case MYTHIC_RARE:
+                mythicExpStr = "    <img src=\"images/mythic.png\" height=\"25\" class=\"d-inline-block align-top boop\"> : "+sum+" &nbsp;&nbsp;&nbsp;";
+                break;
+            case RARE:
+                rareExpStr = "    <img src=\"images/rare.png\" height=\"25\" class=\"d-inline-block align-top boop\"> : "+sum+" &nbsp;&nbsp;&nbsp;";
+                break;
+            case UNCOMMON:
+                uncommonExpStr = "    <img src=\"images/unc.png\" height=\"25\" class=\"d-inline-block align-top boop\"> : "+sum+" &nbsp;&nbsp;&nbsp;";
+                break;
+            default:
+                break;
+			
+			}
 		}
+		
+		exportLines.get(Category.RARITY_COUNT).add(mythicExpStr);
+		exportLines.get(Category.RARITY_COUNT).add(rareExpStr);
+		exportLines.get(Category.RARITY_COUNT).add(uncommonExpStr);
+		exportLines.get(Category.RARITY_COUNT).add(commonExpStr);
+		
+		exportLines.get(Category.RARITY_COUNT).add("</strong>");
+		exportLines.get(Category.RARITY_COUNT).add("</div>");
+		exportLines.get(Category.RARITY_COUNT).add("<hr>");
+        
+        
 
 		//Land info
+		exportLines.get(Category.LANDS).set(0, "<u><strong>Lands ("+landCount+")</u></strong><br>");
+		exportLines.get(Category.CREATURES).set(0, "<br><u><strong>Creatures ("+creatureCount+")</u></strong><br>");
+		exportLines.get(Category.SPELLS).set(0, "<br><u><strong>Spells ("+spellCount+")</u></strong><br>");
+		exportLines.get(Category.PLANESWALKERS).set(0, "<br><u><strong>Planeswalkers ("+planeswalkerCount+")</u></strong><br>");
+		exportLines.get(Category.SIDEBOARD).set(0, "<br><u><strong>Sideboard ("+sideboardCount+")</u></strong><br>");
 	}
 
 	/**
@@ -270,7 +348,7 @@ public class Deck {
 	 */
 	public Category getCategoryType(Card card) {
 		//We must check the card for being a creature before assigning it another category
-		//This is because artifact creatures are going to be seperated from artifacts
+		//This is because artifact creatures are going to be separated from artifacts
 		for (String s : card.getTypes()) {
 			//NOTE: Case sensitive
 			if (s.toUpperCase().equals("CREATURE")) {
@@ -313,7 +391,7 @@ public class Deck {
 	}
 
 	/**
-	 * Counts the number of lines that our script can process for this Deck's associated File, used in conjunction with GUI elements
+	 * Counts the number of lines that our script can process for this Deck's associated import File, used in conjunction with GUI elements
 	 * @return the number of lines our script can process for this Deck File
 	 */
 	public int initFileLineCount() {

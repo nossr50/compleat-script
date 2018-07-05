@@ -90,6 +90,22 @@ public class BoardProfile {
         int count = cards.get(card);
         return count;
     }
+    
+    public int getCountOfType(String type)
+    {
+        int count = 0;
+        
+        for(Card c : cards.keySet())
+        {
+            for(String s : c.getTypes())
+            {
+                if(s.equals(type))
+                    count+=getCount(c);
+            }
+        }
+        
+        return count;
+    }
 
     /**
      * Returns all unique cards found in the board (without the number)
