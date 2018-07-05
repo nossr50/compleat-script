@@ -236,22 +236,22 @@ public class Deck {
 			switch(cardCategory)
 			{
             case CREATURES:
-                creatureCount+=1;
+                creatureCount+=boards.get(BoardType.MAINBOARD).getCount(card);
                 break;
             case LANDS:
-                landCount+=1;
+                landCount+=boards.get(BoardType.MAINBOARD).getCount(card);
                 break;
             case LAND_INFO:
                 break;
             case OTHER:
                 break;
             case PLANESWALKERS:
-                planeswalkerCount+=1;
+                planeswalkerCount+=boards.get(BoardType.MAINBOARD).getCount(card);
                 break;
             case RARITY_COUNT:
                 break;
             case SPELLS:
-                spellCount+=1;
+                spellCount+=boards.get(BoardType.MAINBOARD).getCount(card);
                 break;
             default:
                 break;
@@ -264,7 +264,7 @@ public class Deck {
 			System.out.println("Adding " + card.getName() + " to sideboard category!");
 			exportLines.get(Category.SIDEBOARD).add(getFormattedLine(card, BoardType.SIDEBOARD));
 			
-			sideboardCount+=1;
+			sideboardCount+=boards.get(BoardType.SIDEBOARD).getCount(card);
 		}
 
 		//Rarity Stats
