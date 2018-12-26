@@ -1,8 +1,8 @@
-package compleat.datatypes;
+package com.gmail.nossr50.compleat.datatypes;
 
 /**
  * ENUM used for categorizing the export files contents
- * @see compleat.datatypes.Deck#buildExportLines()
+ * @see com.gmail.nossr50.compleat.datatypes.Deck#buildExportLines()
  * Mostly used as an array to iterate over when creating the export file during DeckScripts writeFile function
  * @author nossr50
  *

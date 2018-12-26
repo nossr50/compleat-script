@@ -1,6 +1,6 @@
-package compleat.datatypes.enums;
+package com.gmail.nossr50.compleat.datatypes.enums;
 
-import compleat.Manager;
+import com.gmail.nossr50.compleat.Manager;
 import io.magicthegathering.javasdk.resource.Card;
 
 /**

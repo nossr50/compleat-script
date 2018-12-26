@@ -1,4 +1,4 @@
-package compleat.gui.tools;
+package com.gmail.nossr50.compleat.gui.tools;
 
 import java.io.IOException;
 import java.net.URL;

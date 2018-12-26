@@ -1,4 +1,4 @@
-package compleat.datatypes;
+package com.gmail.nossr50.compleat.datatypes;
 
 import java.util.HashMap;
 

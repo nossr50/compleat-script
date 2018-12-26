@@ -1,4 +1,4 @@
-package compleat.datatypes.enums;
+package com.gmail.nossr50.compleat.datatypes.enums;
 
 /**
  * Used for tracking the state of our application

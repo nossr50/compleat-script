@@ -1,4 +1,4 @@
-package compleat.scripts;
+package com.gmail.nossr50.compleat.scripts;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,13 +14,13 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import compleat.Main;
-import compleat.Manager;
-import compleat.datatypes.Category;
-import compleat.datatypes.Deck;
-import compleat.datatypes.enums.BoardType;
-import compleat.gui.ScriptGUI;
-import compleat.tools.Checksum;
+import com.gmail.nossr50.compleat.main.CompleatTool;
+import com.gmail.nossr50.compleat.Manager;
+import com.gmail.nossr50.compleat.datatypes.Category;
+import com.gmail.nossr50.compleat.datatypes.Deck;
+import com.gmail.nossr50.compleat.datatypes.enums.BoardType;
+import com.gmail.nossr50.compleat.gui.ScriptGUI;
+import com.gmail.nossr50.compleat.tools.Checksum;
 
 /**
  * This class contains the main script for converting MTGA export dumps or MTG cards into a format for the Compleat website
@@ -38,12 +38,12 @@ public class DeckScript {
 	public static void Init()
 	{
 		//Create file directories if they don't exist
-		makedir(Main.impDir);
-		makedir(Main.impDir+"/guides");
-		makedir(Main.expDir+"/guides");
+		makedir(CompleatTool.impDir);
+		makedir(CompleatTool.impDir+"/guides");
+		makedir(CompleatTool.expDir+"/guides");
 		
 		//Make Deck objects out of our files to prep for IO
-		addDecks(Main.impDir, Main.expDir);
+		addDecks(CompleatTool.impDir, CompleatTool.expDir);
 	}
 	
 	/**
@@ -109,7 +109,7 @@ public class DeckScript {
 	
 	/**
 	 * Checks whether or not a Deck's export file contains an md5 checksum identical to the import file stored in its metadata
-	 * and if it does, that means we have already converted it before and therefor it is "compleat"
+	 * and if it does, that means we have already converted it before and therefor it is "com.gmail.nossr50.compleat"
 	 * @param curDeck The deck to check
 	 * @param impDir Import directory path
 	 * @param expDir Export directory path
@@ -118,7 +118,7 @@ public class DeckScript {
 	 */
 	synchronized public static boolean checkIfCompleat(Deck curDeck, String impDir, String expDir, ScriptGUI sGUI)
 	{
-		System.out.println("Checking to see if deck is compleat...");
+		System.out.println("Checking to see if deck is com.gmail.nossr50.compleat...");
 		String fileName = curDeck.getName();
 		String impFilePATH = impDir + File.separator + fileName;
 		String expFilePATH = expDir + File.separator + fileName;
@@ -145,14 +145,14 @@ public class DeckScript {
 				
 				if(imp_md5.equals(exp_metadata_md5))
 				{
-					System.out.println("Deck is compleat!");
+					System.out.println("Deck is com.gmail.nossr50.compleat!");
 					curDeck.setCompleat();
 					updateDeckGUIElements(curDeck, sGUI, null, null);
-					System.out.println("Deck is compleat 2!");
+					System.out.println("Deck is com.gmail.nossr50.compleat 2!");
 					
 					return true;
 				} else {
-					System.out.println("Deck isn't compleat!");
+					System.out.println("Deck isn't com.gmail.nossr50.compleat!");
 					curDeck.setFileStatus("Idle");
 					return false;
 				}

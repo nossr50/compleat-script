@@ -1,4 +1,4 @@
-package compleat.datatypes;
+package com.gmail.nossr50.compleat.datatypes;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import compleat.Manager;
-import compleat.datatypes.enums.BoardType;
-import compleat.datatypes.enums.CardRarityType;
+import com.gmail.nossr50.compleat.Manager;
+import com.gmail.nossr50.compleat.datatypes.enums.BoardType;
+import com.gmail.nossr50.compleat.datatypes.enums.CardRarityType;
 import io.magicthegathering.javasdk.resource.Card;
 
 /**
@@ -21,14 +21,14 @@ import io.magicthegathering.javasdk.resource.Card;
  * 
  * <p>
  * Deck stores cards within it and sorts them based on which board they belong
- * in (Main or Sideboard), it tracks progress the script has made parsing the
+ * in (CompleatTool or Sideboard), it tracks progress the script has made parsing the
  * associated file for Cards, and updates relevant variables used in conjunction
  * with our GUI elements as the script progresses.
  * <p>
  * Stores a reference to the File representation of the import file for
  * convenience
  * 
- * @see compleat.scripts.DeckScript#writeFile The Deck object has its data
+ * @see com.gmail.nossr50.compleat.scripts.DeckScript#writeFile The Deck object has its data
  *      slowly constructed from a file in the import folder during the
  *      DeckScript class's writeFile() function, before that function is called
  *      the Deck object is merely a shell representation of the import file with
@@ -144,7 +144,7 @@ public class Deck {
 	{
 	    gui_lineCountProgress = newValue;
 	    
-	    //Update compleat status based on the new count
+	    //Update com.gmail.nossr50.compleat status based on the new count
 	    if(gui_lineCountProgress < gui_lineCount)
 	        isCompleat = false;
 	    else
@@ -187,7 +187,7 @@ public class Deck {
 
 	/**
 	 * This method prepares Strings for each Category type for use later with our DeckScript
-	 * @see compleat.scripts.DeckScript#writeFile(Deck, String, String, compleat.gui.ScriptGUI, boolean)
+	 * @see com.gmail.nossr50.compleat.scripts.DeckScript#writeFile(Deck, String, String, com.gmail.nossr50.compleat.gui.ScriptGUI, boolean)
 	 */
 	private void initCategoryLines() {
 		for (Category cat : Category.values()) {

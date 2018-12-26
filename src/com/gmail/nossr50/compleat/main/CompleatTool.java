@@ -1,6 +1,7 @@
-package compleat;
+package com.gmail.nossr50.compleat.main;
 
-import compleat.gui.ScriptGUI;
+
+import com.gmail.nossr50.compleat.gui.ScriptGUI;
 
 /**
  * The entry point for our program, initializing the GUI and the first steps of our application such as making sure the file directories exist and if they do exist checking them for files to be used later in our script.
@@ -18,12 +19,12 @@ import compleat.gui.ScriptGUI;
  * @see <a href="https://www.eclipse.org/swt/">Simple Widget Toolkit</a> 
  * @see <a href="https://gnupg.org/">GNuPG</a> 
  */
-public class Main {
-    private static ScriptGUI   sGUI;              //The singleton instance of our GUI
+public class CompleatTool {
+    private static ScriptGUI sGUI;              //The singleton instance of our GUI
 
     final public static String impDir = "import"; //Import directory name
     final public static String expDir = "export"; //Export directory name
-    final public static String verNum = "v0.12";  //Current version of the script
+    final public static String verNum = "v0.13";  //Current version of the tool
 
     /**
      * The main function of our Java application

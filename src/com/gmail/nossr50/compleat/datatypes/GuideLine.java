@@ -1,11 +1,11 @@
-package compleat.datatypes;
+package com.gmail.nossr50.compleat.datatypes;
 
 import java.util.ArrayList;
 
 /**
  * This class is an array of GuideChunks which represent a line in the Guide
  * @author nossr50
- * @see compleat.datatypes.GuideChunk
+ * @see com.gmail.nossr50.compleat.datatypes.GuideChunk
  */
 public class GuideLine {
     private ArrayList<GuideChunk> stringChunks = new ArrayList<GuideChunk>();

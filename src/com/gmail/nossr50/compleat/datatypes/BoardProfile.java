@@ -1,9 +1,9 @@
-package compleat.datatypes;
+package com.gmail.nossr50.compleat.datatypes;
 
 import java.util.HashMap;
 import java.util.Set;
 
-import compleat.datatypes.enums.CardRarityType;
+import com.gmail.nossr50.compleat.datatypes.enums.CardRarityType;
 import io.magicthegathering.javasdk.resource.Card;
 
 /**

@@ -1,4 +1,4 @@
-package compleat.tools;
+package com.gmail.nossr50.compleat.tools;
 
 import java.io.File;
 import java.io.FileInputStream;

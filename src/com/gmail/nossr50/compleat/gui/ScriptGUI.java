@@ -1,4 +1,4 @@
-package compleat.gui;
+package com.gmail.nossr50.compleat.gui;
 
 import java.util.HashMap;
 
@@ -15,13 +15,13 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-import compleat.Main;
-import compleat.Manager;
-import compleat.datatypes.Deck;
-import compleat.datatypes.enums.ScriptState;
-import compleat.gui.tools.CardImageManager;
-import compleat.runnables.DeckScriptThread;
-import compleat.scripts.DeckScript;
+import com.gmail.nossr50.compleat.main.CompleatTool;
+import com.gmail.nossr50.compleat.Manager;
+import com.gmail.nossr50.compleat.datatypes.Deck;
+import com.gmail.nossr50.compleat.datatypes.enums.ScriptState;
+import com.gmail.nossr50.compleat.gui.tools.CardImageManager;
+import com.gmail.nossr50.compleat.runnables.DeckScriptThread;
+import com.gmail.nossr50.compleat.scripts.DeckScript;
 import io.magicthegathering.javasdk.resource.Card;
 
 import org.eclipse.swt.widgets.Group;
@@ -37,17 +37,17 @@ import org.eclipse.swt.widgets.ProgressBar;
  */
 public class ScriptGUI {
 	/*
-	 * Main components of our GUI
+	 * CompleatTool components of our GUI
 	 */
 	public ScriptState curState;
 	private Display displayMain;
-	private Shell shellMain;
+	private Shell shellCompleatTool;
 
 	/*
 	 * vars for elements of our GUI
 	 */
 
-	private String appTitle = "The Compleat Tool - "+Main.verNum;
+	private String appTitle = "The Compleat Tool - "+CompleatTool.verNum;
 
 	/*
 	 * Composites
@@ -136,21 +136,21 @@ public class ScriptGUI {
 	private void Init()
 	{
 		
-		//Main shell & display used in our application
+		//CompleatTool shell & display used in our application
 		displayMain = new Display();
-		shellMain = new Shell (displayMain);
+		shellCompleatTool = new Shell (displayMain);
 		curState = ScriptState.IDLE;
 
 		//Properties of the shell
-		shellMain.setSize(841, 462);
-		shellMain.setText(appTitle);
-		shellMain.update();
+		shellCompleatTool.setSize(841, 462);
+		shellCompleatTool.setText(appTitle);
+		shellCompleatTool.update();
 
 		//Initializes the widgets and properties of those widgets
-		initWidgets(shellMain);
+		initWidgets(shellCompleatTool);
 		
 		//This is the LAST thing we do before starting the loop
-		shellMain.open();
+		shellCompleatTool.open();
 		
 		/*
 		 * 
@@ -160,8 +160,8 @@ public class ScriptGUI {
         thread.start();
 		*/
 		
-		//Main loop running while the applications window is open
-		while (!shellMain.isDisposed ()) {
+		//CompleatTool loop running while the applications window is open
+		while (!shellCompleatTool.isDisposed ()) {
 			if (!displayMain.readAndDispatch ()) displayMain.sleep ();
 		}
 
@@ -183,7 +183,7 @@ public class ScriptGUI {
 		 * Widgets related to displaying and rendering card art
 		 */
 		
-		grpCardInfoPanel = new Group(shellMain, SWT.NONE);
+		grpCardInfoPanel = new Group(shellCompleatTool, SWT.NONE);
 		grpCardInfoPanel.setText("Card Info");
 		grpCardInfoPanel.setBounds(474, 5, 341, 410);
 
@@ -204,7 +204,7 @@ public class ScriptGUI {
 	 */
 	private void initDeckScriptWidgets(Shell shell)
 	{
-		shellMain.setLayout(null);
+		shellCompleatTool.setLayout(null);
 		//Make the parent object
 		deckScriptComposite 				= new Composite(shell, SWT.NONE);
 		deckScriptComposite.setBounds(5, 5, 463, 435);
@@ -212,7 +212,7 @@ public class ScriptGUI {
 
 		for(Deck curDeck : Manager.getDecks())
 		{
-			DeckScript.checkIfCompleat(curDeck, Main.impDir, Main.expDir, this);
+			DeckScript.checkIfCompleat(curDeck, CompleatTool.impDir, CompleatTool.expDir, this);
 		}
 
 		grpDeckScript = new Group(deckScriptComposite, SWT.NONE);
@@ -337,7 +337,7 @@ public class ScriptGUI {
 	 * Updates the text based widgets asynchronously
 	 * @param deck The deck to update
 	 */
-	synchronized public void asyncUpdateTextWidgets(Deck deck)
+	synchronized public void asyncUpdateTextWidgets(final Deck deck)
 	{
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
@@ -351,7 +351,7 @@ public class ScriptGUI {
 	 * Updates the Card Image related widgets asynchronously
 	 * @param card The card we want to load the image for
 	 */
-	public void asyncUpdateCardImage(Card card)
+	public void asyncUpdateCardImage(final Card card)
 	{
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {

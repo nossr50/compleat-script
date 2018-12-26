@@ -1,4 +1,4 @@
-package compleat.tools;
+package com.gmail.nossr50.compleat.tools;
 
 import java.util.Arrays;
 
@@ -12,8 +12,8 @@ public class EditDistance {
     /**
      * This method compares the distance between two strings (Levenshtein distance)
      * <p> Levenshtein Distance is simple the number of edits needed to convert one string into the other
-     * @param a The first string
-     * @param b The second string
+     * @param x The first string
+     * @param y The second string
      * @return the numeric distance between the strings
      * @see <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein Distance Wikipedia Page</a>
      */

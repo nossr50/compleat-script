@@ -1,14 +1,14 @@
-package compleat.runnables;
+package com.gmail.nossr50.compleat.runnables;
 
-import compleat.Main;
-import compleat.datatypes.enums.ScriptState;
-import compleat.gui.ScriptGUI;
-import compleat.scripts.DeckScript;
+import com.gmail.nossr50.compleat.main.CompleatTool;
+import com.gmail.nossr50.compleat.datatypes.enums.ScriptState;
+import com.gmail.nossr50.compleat.gui.ScriptGUI;
+import com.gmail.nossr50.compleat.scripts.DeckScript;
 
 /**
  * This class is to run the IO work of our DeckScript in its own thread so that the GUI doesn't hang or lag
  * @author nossr50
- * @see DeckScript#writeFile(compleat.datatypes.Deck, String, String, ScriptGUI, boolean)
+ * @see DeckScript#writeFile(com.gmail.nossr50.compleat.datatypes.Deck, String, String, ScriptGUI, boolean)
  */
 public class DeckScriptThread implements Runnable {
 	
@@ -32,7 +32,7 @@ public class DeckScriptThread implements Runnable {
 	public void run() {
 		System.out.println("Executing Threaded process: Deck Script");
 		sGUI.setScriptState(ScriptState.RUNNING);
-		DeckScript.processDeckFiles(Main.impDir, Main.expDir, sGUI, force);
+		DeckScript.processDeckFiles(CompleatTool.impDir, CompleatTool.expDir, sGUI, force);
 		System.out.println("Finished Threaded process: Deck Script");
 		
 		sGUI.setScriptState(ScriptState.FINISHED);

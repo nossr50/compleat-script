@@ -1,12 +1,12 @@
-package compleat;
+package com.gmail.nossr50.compleat;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import compleat.datatypes.Deck;
-import compleat.datatypes.Guide;
+import com.gmail.nossr50.compleat.datatypes.Deck;
+import com.gmail.nossr50.compleat.datatypes.Guide;
 import io.magicthegathering.javasdk.api.CardAPI;
 import io.magicthegathering.javasdk.resource.Card;
 
@@ -73,7 +73,7 @@ public class Manager {
 
     /**
      * @return ArrayList of Decks instantiated from files found in the imports folder
-     * @see compleat.scripts.DeckScript#Init() Decks are added to this ArrayList here
+     * @see com.gmail.nossr50.compleat.scripts.DeckScript#Init() Decks are added to this ArrayList here
      */
     public static Collection<Deck> getDecks() {
         return deckMap.values();

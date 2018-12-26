@@ -1,4 +1,4 @@
-package compleat.scripts;
+package com.gmail.nossr50.compleat.scripts;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,10 +6,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import compleat.Main;
-import compleat.Manager;
-import compleat.datatypes.Guide;
-import compleat.tools.EditDistance;
+import com.gmail.nossr50.compleat.main.CompleatTool;
+import com.gmail.nossr50.compleat.Manager;
+import com.gmail.nossr50.compleat.datatypes.Guide;
+import com.gmail.nossr50.compleat.tools.EditDistance;
 import io.magicthegathering.javasdk.resource.Card;
 
 /**
@@ -154,7 +154,7 @@ public class GuideScript {
     
     private static void addGuides()
     {
-        File dir = new File(Main.impDir + File.separator + "guides");
+        File dir = new File(CompleatTool.impDir + File.separator + "guides");
         
         File[] files = dir.listFiles();
         

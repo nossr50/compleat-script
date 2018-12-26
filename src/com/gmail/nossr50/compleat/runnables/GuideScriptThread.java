@@ -1,6 +1,6 @@
-package compleat.runnables;
+package com.gmail.nossr50.compleat.runnables;
 
-import compleat.scripts.GuideScript;
+import com.gmail.nossr50.compleat.scripts.GuideScript;
 
 public class GuideScriptThread implements Runnable {
     /**
